@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<title>Play Time</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Play Time">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<script src="config.js"></script>
+<style>
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;-webkit-text-size-adjust:100%}
+/* Layout: one phone column on white paper, black ink, red as the only accent; two cat mascots (LS black, SH white) — ink-outlined top bar, hand-drawn П mascot as hero, title + score bar, outlined boxes, a black sparkle CTA, a row of round tool buttons. Single deliberate light look. */
+:root{
+  --paper:#FFFFFF; --card:#FFFFFF; --ink:#111111; --ink-2:#5C5C5C; --ink-3:#ABABAB; --line:#111111;
+  --red:#111111; --red-soft:#EFEFEF;
+  --display:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --body:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 32px}
+[hidden]{display:none!important}
+.app{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+/* top bar */
+.top{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px}
+.circ.white{background:#fff;color:var(--ink)}
+.sq,.circ{width:44px;height:44px;border:2.5px solid var(--ink);background:var(--card);display:grid;place-items:center;cursor:pointer;color:var(--ink);padding:0}
+.sq{border-radius:13px}.circ{border-radius:50%;background:var(--ink);color:var(--paper);font:800 13px var(--mono)}
+.sq svg{width:20px;height:20px}
+.top .mid{text-align:center;display:flex;flex-direction:column;gap:1px}
+.top .mid b{font:800 13px var(--display);letter-spacing:.06em;text-transform:uppercase}
+.top .mid span{font:500 11.5px var(--mono);color:var(--ink-2)}
+
+/* test strip */
+.strip{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2.5px solid var(--ink);background:var(--red-soft);border-radius:16px;padding:8px 8px 8px 14px;font:700 12px var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.strip button{border:2px solid var(--ink);background:var(--card);border-radius:99px;padding:6px 12px;font:700 11.5px var(--mono);cursor:pointer;color:var(--ink);text-transform:uppercase}
+
+/* hero */
+.hero{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.hero svg.mascot{width:min(250px,70vw);height:auto;display:block}
+.hero h1{font:800 34px/1.05 var(--display);letter-spacing:-.02em;margin:4px 0 0;text-wrap:balance}
+.hero .sub{font:500 13px var(--mono);color:var(--ink-2)}
+.hero .sub b{color:var(--ink)}
+.secret{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.word{font:800 22px var(--display);color:#fff;background:var(--red);border:2.5px solid var(--ink);border-radius:12px;padding:4px 14px;transform:rotate(-1.5deg)}
+.link{background:none;border:0;font:700 12px var(--mono);color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px}
+
+/* score bar */
+.scorebar{display:flex;flex-direction:column;gap:7px}
+.track{height:20px;border:2.5px solid var(--ink);border-radius:99px;overflow:hidden;display:flex;background:var(--card)}
+.track .ls{background:var(--ink);border-right:2.5px solid var(--ink)}
+.track .sh{background:var(--card);flex:1}
+.track.empty .ls{background:var(--card);border-right:2px dashed var(--ink-3)}.track.empty .sh{background:var(--card)}
+.scorelabels{display:flex;justify-content:space-between;font:700 12.5px var(--mono);font-variant-numeric:tabular-nums}
+.scorelabels .me{color:var(--red)}
+.scorelabels .me::after{content:" · ты";color:var(--ink-3);font-weight:500}
+.tabs{display:flex;justify-content:center;gap:4px}
+.tabs button{border:0;background:none;font:700 11px var(--mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;padding:4px 8px;border-radius:99px;cursor:pointer}
+.tabs button[aria-pressed="true"]{color:var(--ink);background:var(--red-soft)}
+
+/* boxes */
+.box{border:2.5px solid var(--ink);border-radius:20px;background:var(--card);padding:6px 16px;display:flex;flex-direction:column}
+.clue{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:baseline;padding:11px 0;border-bottom:1.5px dashed var(--ink-3)}
+.clue:last-child{border-bottom:0}
+.clue .n{font:800 12px var(--mono);color:var(--ink-2)}
+.clue .t{font:700 18px var(--display);letter-spacing:-.01em;min-width:0;overflow-wrap:anywhere}
+.clue.locked .t{font:500 13px var(--mono);color:var(--ink-3)}
+.guess{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:center;padding:6px 0}
+.guess .n{font:800 12px var(--mono);color:var(--ink-2)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.tag{font:700 14px var(--display);padding:4px 12px;border-radius:99px;border:2px solid var(--ink);background:var(--card);overflow-wrap:anywhere;text-decoration:line-through;text-decoration-thickness:2px;color:var(--ink-2)}
+.tag.hot{background:var(--red-soft);text-decoration:none;color:var(--ink)}
+.tag.hot::after{content:" тепло";font:700 10px var(--mono);color:var(--ink-2)}
+.tag.win{background:var(--red);border-color:var(--ink);text-decoration:none;color:#fff}
+.dots{display:flex;gap:6px;justify-content:center}
+.dots span{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:var(--card)}
+.dots span.used{background:var(--ink)}.dots span.win{background:var(--red)}
+
+/* fields */
+.fields{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{display:flex;justify-content:space-between;font:800 11.5px var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.field label span{color:var(--ink-3);font-weight:500;text-transform:none;letter-spacing:0}
+input[type=text]{width:100%;font:700 18px var(--display);color:var(--ink);background:var(--card);border:2.5px solid var(--ink);border-radius:16px;padding:12px 14px;outline:none}
+input[type=text]::placeholder{color:var(--ink-3);font-weight:500}
+input[type=text]:focus{box-shadow:4px 4px 0 var(--ink)}
+input.bad{background:var(--red-soft);border-color:var(--red)}
+.hint{font:500 11.5px var(--mono);min-height:16px;margin:0;color:var(--ink-2)}
+.hint.bad{color:var(--red)}.hint.ok{color:var(--ink-2)}.hint.ok::before{content:"✓ "}
+
+/* CTA */
+.cta{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--ink);color:var(--paper);border:0;border-radius:99px;padding:17px 22px;cursor:pointer;font:800 13.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;transition:transform .1s}
+.cta svg{width:16px;height:16px;flex:none}
+.cta:active{transform:scale(.98)}
+.cta:disabled{opacity:.3;cursor:default}
+.cta.light{background:var(--card);color:var(--ink);border:2.5px solid var(--ink)}
+button:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+
+/* tool row */
+.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;justify-items:center}
+.tool{width:100%;max-width:110px;aspect-ratio:1.25;border:2.5px solid var(--ink);border-radius:99px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--ink);font:700 10.5px var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.tool svg{width:30px;height:30px}
+
+.wait{font:500 13px var(--mono);color:var(--ink-2);text-align:center}
+.prev{display:flex;justify-content:space-between;align-items:center;gap:10px;border:2px dashed var(--ink-3);border-radius:16px;padding:10px 14px;font:500 12.5px var(--mono);color:var(--ink-2)}
+.prev b{font:800 16px var(--display);color:var(--ink)}
+.err{border:2.5px solid var(--ink);background:var(--red-soft);border-radius:16px;padding:10px 14px;font:500 13px var(--mono)}
+
+/* sheets */
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(20,18,16,.35);display:flex;align-items:flex-end;justify-content:center;animation:fade .2s ease}
+.sheet{width:100%;max-width:460px;max-height:86vh;overflow:auto;background:var(--paper);border:2.5px solid var(--ink);border-bottom:0;border-radius:28px 28px 0 0;
+  padding:20px max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px;animation:rise .25s cubic-bezier(.2,.8,.2,1)}
+.sheet .hd{display:flex;justify-content:space-between;align-items:center}
+.sheet h2{font:800 24px var(--display);margin:0;letter-spacing:-.02em}
+.sheet p{margin:0;font-size:14.5px;line-height:1.5}
+.x{width:36px;height:36px;border-radius:50%;border:2.5px solid var(--ink);background:var(--card);font:800 16px var(--mono);cursor:pointer;color:var(--ink)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font:800 11px var(--mono);text-transform:uppercase;letter-spacing:.04em;padding:0 0 6px;border-bottom:2.5px solid var(--ink)}
+td{padding:9px 0;border-bottom:1.5px dashed var(--ink-3);font-size:14px}
+.r{text-align:right}td.r{font:800 14px var(--mono);white-space:nowrap}
+.hitem{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:12px 0;border-bottom:1.5px dashed var(--ink-3)}
+.hitem .w{font:800 17px var(--display)}
+.hitem .d,.hitem .c{font:500 12px var(--mono);color:var(--ink-2)}
+.hitem .d{text-align:right}.hitem .c{grid-column:1/-1}
+
+/* celebration */
+.ov{position:fixed;inset:0;z-index:50;background:var(--paper);overflow:auto;display:flex;flex-direction:column;align-items:center;
+  padding:calc(20px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));animation:fade .25s ease}
+.ov .in{width:100%;max-width:420px;margin:auto;display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center}
+.ov svg.mascot{width:min(240px,62vw);height:auto;animation:hop .7s cubic-bezier(.3,1.6,.5,1) both}
+.ov .kick{font:800 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
+.ov .big{font:800 clamp(40px,13vw,60px)/1 var(--display);letter-spacing:-.03em;overflow-wrap:anywhere}
+.ov .big span{display:inline-block;animation:up .45s cubic-bezier(.2,.8,.2,1) both}
+.ov .pts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{border:2.5px solid var(--ink);border-radius:99px;padding:6px 14px;font:800 13px var(--mono);background:var(--card)}
+.chip.lemon{background:var(--red);color:#fff}.chip.tomato{background:var(--ink);color:#fff}
+.fact{width:100%;text-align:left;border:2.5px solid var(--ink);border-radius:20px;background:var(--card);padding:14px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:5px 5px 0 var(--red)}
+.fact .k{font:800 11px var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.fact p{margin:0;font:500 16px/1.45 var(--body)}
+.fact .s{font:500 11px var(--mono);color:var(--ink-2)}
+.sentclues{width:100%;text-align:left}
+.login{min-height:calc(100vh - 80px);display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;text-align:center}
+.login h1{font:800 40px/1 var(--display);letter-spacing:-.02em;margin:0}
+.login .sub{font:500 13px var(--mono);color:var(--ink-2)}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:0;width:100%}
+.pick button{border:0;border-radius:24px;background:none;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--ink);transition:transform .12s}
+.pick button:hover{transform:translateY(-3px) rotate(-1deg)}
+.pick button:active{transform:scale(.97)}
+.pick button.black b{color:var(--ink)}
+.pick button:disabled{opacity:.35;cursor:default;transform:none}
+.pick svg{width:100%;height:auto}
+.pick b{font:800 34px var(--display);letter-spacing:-.01em}
+.pick span{font:500 12px var(--mono);opacity:.75}
+.pick button.black svg{filter:invert(0)}
+@keyframes fade{from{opacity:0}}
+@keyframes rise{from{transform:translateY(40px);opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(.4em)}}
+@keyframes hop{0%{transform:translateY(30px) scale(.9);opacity:0}100%{transform:none;opacity:1}}
+@keyframes twinkle{50%{transform:scale(.6) rotate(20deg)}}
+.tw{transform-box:fill-box;transform-origin:center;animation:twinkle 2.4s ease-in-out infinite}
+.tw.b{animation-delay:.8s}.tw.c{animation-delay:1.5s}
+@media (prefers-reduced-motion:reduce){.tw,.ov,.ov svg.mascot,.ov .big span,.scrim,.sheet{animation:none}}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="wob" x="-6%" y="-6%" width="112%" height="112%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="7" result="w"/>
+    <feDisplacementMap in="SourceGraphic" in2="w" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="crayon" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="3" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+    <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="9" result="g"/>
+    <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.5 1.15" result="gm"/>
+    <feComposite in="d" in2="gm" operator="in"/>
+  </filter>
+</svg>
+<div class="app" id="app"><div class="hero" style="padding-top:40px"><h1>Открываем…</h1></div></div>
+<div id="ov" class="ov" hidden></div>
+<div id="sheet" hidden></div>
+
+<script>
+/* ---------- words ---------- */
+const WORDS=[...new Set(("кошка зонт самолёт мороженое ёлка радуга чемодан бабушка телефон гитара свадьба кактус шоколад метро жираф холодильник "+
+"зеркало вулкан маяк школа бассейн ракета снеговик торт будильник лифт дракон компас корабль сыр ведьма наушники фонтан "+
+"медуза библиотека шуба арбуз робот космонавт барабан фея кино духи ресница огурец кенгуру очки цирк бегемот айсберг "+
+"кровать мыло лошадь носок шахматы утюг бабочка вертолёт тыква ведро зима сосулька велосипед хомяк улитка дельфин глобус "+
+"фокусник светофор ковёр корона рояль кузнечик лимон душ микроволновка ёж сова тюльпан самовар такси кит лук звезда "+
+"вафля сказка маникюр рюкзак кофе сумка карусель тигр волна ромашка рыбак диван кукла салют свеча якорь облако жвачка "+
+"гусь крокодил банан лампа море осень мармелад шарф гамак стрекоза ландыш ключ невеста трамвай слон эскимо борщ матрёшка"+" ностальгия интуиция вдохновение равнодушие ирония сарказм совесть ревность одиночество благодарность дежавю эхо горизонт гравитация бесконечность иллюзия лабиринт метаморфоза архитектор дирижёр алхимик гипнотизёр астроном кардиолог нейрохирург сомелье парфюмер хореограф таксидермист реставратор метроном калейдоскоп телескоп микроскоп барометр флюгер маятник песочница акведук маяк обсерватория катакомбы мавзолей колизей минарет витраж мозаика гобелен фреска орнамент силуэт тень отражение затмение комета созвездие туманность метеорит северное-сияние гейзер ледник айсберг цунами торнадо оазис мираж водопад вулкан землетрясение хамелеон броненосец муравьед утконос осьминог каракатица медуза скорпион богомол светлячок хамство щедрость азарт скука эйфория паника сарафан кринолин монокль цилиндр корсет веер канделябр граммофон патефон шарманка клавесин виолончель саксофон литавры кастаньеты арфа балалайка тромбон аккордеон партитура либретто антракт суфлёр кулисы аплодисменты премьера эпилог пролог метафора анекдот каламбур палиндром алфавит иероглиф шифр криптограмма компас секстант якорь штурвал шхуна субмарина дирижабль катапульта баллиста бумеранг лассо гарпун капкан ловушка невидимка оборотень привидение вампир русалка единорог кентавр грифон феникс дракон сфинкс мумия пирамида саркофаг амулет талисман гороскоп пасьянс домино шахматы бильярд кегельбан карусель батут аттракцион фейерверк конфетти серпантин маскарад карнавал").split(" "))];
+
+/* ---------- daily extras: [type, text, source] ---------- */
+const EXTRAS=[ /* [fact, source] — peer-reviewed findings or long-established science */
+ /* --- 2025–2026 --- */
+ ["Косатки делают из водорослей инструмент: откусывают стебель ламинарии и трут им друг друга, как мочалкой.","Current Biology, 2025"],
+ ["Из мамонтёнка возрастом ~40 000 лет впервые извлекли РНК — молекулу, которая обычно разрушается за часы.","Cell, 2025"],
+ ["Учёные показали людям цвет «оло» — сине-зелёный, которого нет в природе: его видно, только если лазером возбуждать одни M-колбочки.","Science Advances, 2025"],
+ ["На Гавайях нашли гусеницу, которая украшает свой домик частями тел съеденных насекомых. Её прозвали «собирательницей костей».","Science, 2025"],
+ ["Рыжий цвет кошек объяснили: у них выпал кусочек ДНК рядом с геном ARHGAP36 на X-хромосоме.","Current Biology, 2025"],
+ ["Бегемоты на быстрой рыси на мгновение отрывают от земли все четыре ноги.","PeerJ, 2025"],
+ ["Мыши оказывают первую помощь: тормошат сородича без сознания и вытягивают ему язык, освобождая дыхательные пути.","Science, 2025"],
+ ["У львов нашли второй тип рыка — «промежуточный». Компьютер различает их с точностью около 95%.","Ecology and Evolution, 2025"],
+ ["Знаменитую «крысиную яму» в асфальте Чикаго, скорее всего, оставила белка, а не крыса.","Biology Letters, 2025"],
+ ["В июле 2025 года родился ребёнок из эмбриона, замороженного в 1994-м. Эмбриону было больше 30 лет.","2025"],
+ ["Дятлы на каждый удар клювом резко выдыхают, как теннисисты при подаче.","Journal of Experimental Biology, 2025"],
+ ["«Джеймс Уэбб» нашёл галактику MoM-z14, которая светила всего через ~280 млн лет после Большого взрыва.","2025"],
+ ["В пыли с астероида Бенну нашли все пять «букв» ДНК и РНК и 14 из 20 аминокислот, из которых строятся белки.","Nature Astronomy, 2025"],
+ ["В июле 2025 года открыли 3I/ATLAS — всего третий известный объект, прилетевший к нам из другой звёздной системы.","2025"],
+ ["У Сатурна 274 подтверждённых спутника — больше, чем у всех остальных планет вместе.","IAU, 2025"],
+ ["«Джеймс Уэбб» нашёл у Урана новый крошечный спутник, около 10 км в поперечнике. Теперь их 29.","NASA, 2025"],
+ ["В Китае вывели мышей от двух отцов, которые дожили до взрослого возраста.","Cell Stem Cell, 2025"],
+ ["Дельфины во время игры показывают друг другу «улыбку» — открытый рот, и партнёр часто отвечает тем же.","iScience, 2025"],
+ ["Горбатые киты пускают в сторону людей кольца из пузырей — учёные описали больше десятка таких встреч.","Marine Mammal Science, 2025"],
+ ["В конце 2026 года «Вояджер-1» впервые в истории окажется в одних световых сутках от Земли.","NASA"],
+ ["Обсерватория Веры Рубин за первые 10 часов наблюдений нашла больше 2000 новых астероидов.","Rubin Observatory, 2025"],
+ ["В 2025 году ребёнку с редкой болезнью печени впервые сделали генную терапию, созданную лично под его мутацию.","NEJM, 2025"],
+ ["В 2025 году одобрили укол от ВИЧ, который защищает полгода. Испытания показали почти стопроцентную защиту.","FDA, 2025"],
+ ["Пещерным рисункам на Сулавеси не меньше 67 800 лет: это древнейшее известное искусство человека.","Nature, 2026"],
+ ["Сиднейские какаду научились поворачивать ручку питьевого фонтанчика, чтобы попить, и учатся этому друг у друга.","Biology Letters, 2024"],
+ /* --- 2022–2024 --- */
+ ["Слоны обращаются друг к другу по «именам»: у каждого слона свой индивидуальный зов.","Nature Ecology & Evolution, 2024"],
+ ["Мартышки-игрунки зовут друг друга по именам специальными звуками.","Science, 2024"],
+ ["Шмели катают маленькие шарики просто так, без награды. Это похоже на настоящую игру.","Animal Behaviour, 2022"],
+ ["Растения в стрессе издают ультразвуковые щелчки, и по ним можно понять, что с растением.","Cell, 2023"],
+ ["Осьминоги охотятся вместе с рыбами и иногда бьют рыбу-напарника щупальцем.","Nature Ecology & Evolution, 2024"],
+ ["Прыгающие пауки, похоже, видят сны: во сне у них дёргаются ноги и сетчатка.","PNAS, 2022"],
+ ["Осьминоги во сне меняют цвет кожи, проигрывая дневные узоры.","Nature, 2023"],
+ ["Губаны-чистильщики узнают себя на фотографиях.","PNAS, 2023"],
+ ["Вороны понимают рекурсию — вложенные структуры вроде скобок в скобках.","Science Advances, 2022"],
+ ["Вороны умеют «считать вслух»: каркают ровно столько раз, сколько им показали.","Science, 2024"],
+ ["У кошек насчитали 276 разных выражений морды.","Behavioural Processes, 2023"],
+ ["Мозг собаки реагирует на название знакомой игрушки так, будто ждёт её увидеть.","Current Biology, 2024"],
+ ["Дельфины-афалины чувствуют слабые электрические поля.","Journal of Experimental Biology, 2023"],
+ ["В щелчках кашалотов нашли «фонетический алфавит» — они комбинируют элементы, как мы буквы.","Nature Communications, 2024"],
+ ["Орангутан Ракус сам вылечил рану на щеке, нанеся на неё жёваные листья лекарственного растения.","Scientific Reports, 2024"],
+ ["Шмели перенимают у сородичей двухшаговые трюки, которые не могли бы придумать сами.","Nature, 2024"],
+ ["Стеклянные лягушки становятся прозрачными во сне: прячут почти все красные кровяные клетки в печени.","Science, 2022"],
+ ["Гриб вёшенки научили управлять роботом: электрические сигналы грибницы двигают его ноги.","Science Robotics, 2024"],
+ ["Хвост наши предки потеряли из-за одной мобильной вставки ДНК в гене TBXT.","Nature, 2024"],
+ ["Самый большой геном у маленького папоротника Tmesipteris: он в 50 раз длиннее человеческого.","iScience, 2024"],
+ ["В 2023 году у Соломоновых островов нашли самый большой коралл в мире — его видно из космоса.","National Geographic, 2023"],
+ ["Пчёлы понимают, что такое ноль, и ставят его меньше единицы.","Science, 2018"],
+ ["Алтарный камень Стоунхенджа привезли из Шотландии — больше чем за 700 км.","Nature, 2024"],
+ ["Древнейшей деревянной постройке около 476 000 лет. Её сделали ещё до появления нашего вида.","Nature, 2023"],
+ ["ДНК жертв Помпеев опровергла старые истории: «мать с ребёнком» оказались не родственниками.","Current Biology, 2024"],
+ ["Эверест стал выше на 15–50 метров из-за соседней реки, которая размывает землю и «облегчает» горы.","Nature Geoscience, 2024"],
+ ["Таяние полярного льда слегка замедляет вращение Земли, и сутки становятся длиннее.","PNAS, 2024"],
+ ["В 2023 году на ЦЕРН проверили: антивещество падает вниз, как обычное.","Nature, 2023"],
+ ["В 2022 году впервые получили термоядерную реакцию, которая дала больше энергии, чем вложил в неё лазер.","LLNL, 2022"],
+ ["Египет в 2024 году официально признан свободным от малярии.","ВОЗ, 2024"],
+ ["Комаров с бактерией Wolbachia выпустили в Индонезии — заболеваемость лихорадкой денге упала на 77%.","NEJM, 2021"],
+ ["Комары годами выбирают одних и тех же людей: дело в кислотах на коже.","Cell, 2022"],
+ ["Солнце вошло в фазу максимума активности — отсюда сильные полярные сияния 2024 года.","NASA, 2024"],
+ ["Европейские угри плывут на нерест в Саргассово море — в 2022 году это впервые подтвердили метками.","Scientific Reports, 2022"],
+ ["Самую глубоководную рыбу сняли на глубине 8336 метров у берегов Японии.","2023"],
+ ["Подробно нанесено на карту только около четверти дна океана.","Seabed 2030, 2024"],
+ ["Гренландские акулы живут минимум 272 года.","Science, 2016"],
+ ["Крысы смеются ультразвуком, когда их щекочут, и сами бегут за добавкой.","Science, 2016"],
+ ["Крысы умеют играть в прятки и пищат от радости, когда их находят.","Science, 2019"],
+ ["Вомбаты какают кубиками: форму задаёт неравномерная жёсткость кишечника.","Soft Matter, 2021"],
+ ["Утконосы светятся сине-зелёным под ультрафиолетом.","Mammalia, 2020"],
+ ["«Джеймс Уэбб» видел галактику, светившую через ~290 млн лет после Большого взрыва.","Nature, 2024"],
+ ["Озоновая дыра затягивается: над Антарктидой слой восстановится примерно к 2066 году.","WMO/UNEP, 2023"],
+ ["Около 7000 шагов в день связаны с заметно меньшим риском ранней смерти. 10 000 — не магическое число.","Lancet Public Health, 2025"],
+ ["Козы охотнее подходят к улыбающимся людям.","Royal Society Open Science, 2018"],
+ ["Фрегаты спят прямо в полёте, по нескольку секунд за раз.","Nature Communications, 2016"],
+ ["Чёрные стрижи держатся в воздухе до 10 месяцев без посадки.","Current Biology, 2016"],
+ ["Малый веретенник пролетел 13 560 км без единой остановки — от Аляски до Тасмании.","2022"],
+ ["Полосы зебр сбивают с толку мух: те хуже на них садятся.","PLoS One, 2019"],
+ ["Древнейшая ДНК — из гренландской вечной мерзлоты, ей около 2 миллионов лет.","Nature, 2022"],
+ ["Голые землекопы почти не болеют раком и живут больше 30 лет — в десять раз дольше мышей.","eLife, 2018"],
+ /* --- космос --- */
+ ["Свет от Солнца летит до Земли около 8 минут 20 секунд.","NASA"],
+ ["Свет из ядра Солнца пробивается к его поверхности десятки тысяч лет.","NASA"],
+ ["В Солнце поместилось бы около 1,3 миллиона Земель.","NASA"],
+ ["Сутки на Венере длиннее её года.","NASA"],
+ ["Закаты на Марсе голубые.","NASA"],
+ ["Уран вращается, лёжа на боку.","NASA"],
+ ["На Нептуне ветры дуют быстрее 2000 км/ч.","NASA"],
+ ["Большое красное пятно Юпитера уменьшается уже больше века.","NASA"],
+ ["Сатурн менее плотный, чем вода.","NASA"],
+ ["Луна каждый год отдаляется от Земли примерно на 3,8 см.","Lunar Laser Ranging"],
+ ["1,4 миллиарда лет назад сутки на Земле длились около 18 часов.","PNAS, 2018"],
+ ["Чайная ложка вещества нейтронной звезды весила бы миллиарды тонн.","NASA"],
+ ["Часть золота во Вселенной рождается при столкновениях нейтронных звёзд.","Nature, 2017"],
+ ["Часть воды на Земле старше Солнца.","Science, 2014"],
+ ["МКС видит около 16 восходов и закатов в сутки.","NASA"],
+ ["Следы астронавтов на Луне могут сохраниться миллионы лет: там нет ветра.","NASA"],
+ ["Внутри Урана и Нептуна, по расчётам и опытам, может идти алмазный дождь.","Nature Astronomy, 2017"],
+ ["Тихоходки пережили открытый космос на орбите и потом размножались.","Current Biology, 2008"],
+ ["На Земле около 3 триллионов деревьев — больше, чем звёзд в Млечном Пути.","Nature, 2015"],
+ ["Возраст Вселенной — около 13,8 миллиарда лет.","Planck, 2018"],
+ ["Тираннозавр жил ближе по времени к нам, чем к стегозавру.","палеонтология"],
+ ["Клеопатра жила ближе к высадке на Луну, чем к строительству пирамиды Хеопса.","история"],
+ ["Акулы появились раньше деревьев.","палеонтология"],
+ ["Птицы — это динозавры. Курица — дальняя родственница тираннозавра.","палеонтология"],
+ /* --- животные --- */
+ ["У осьминога три сердца и голубая кровь.","биология"],
+ ["Аксолотль отращивает лапы, хвост, части сердца и мозга.","биология"],
+ ["Медуза Turritopsis dohrnii умеет «омолаживаться», возвращаясь в стадию полипа.","биология"],
+ ["Вороны запоминают лица обидчиков на годы и учат этому своих птенцов.","Animal Behaviour, 2010"],
+ ["Голуби учатся отличать картины Моне от Пикассо.","JEAB, 1995"],
+ ["Медоносные пчёлы рассказывают дорогу к цветам «танцем».","биология"],
+ ["Муравьи-листорезы выращивают грибы десятки миллионов лет — задолго до людей.","биология"],
+ ["Лирохвост подражает бензопиле, затвору фотоаппарата и сигнализации.","биология"],
+ ["Совы не двигают глазами, зато поворачивают голову примерно на 270°.","биология"],
+ ["На шерсти ленивцев растут водоросли.","биология"],
+ ["Фламинго розовые из-за пигментов в еде. Без них они бледнеют.","биология"],
+ ["У морских коньков вынашивают и рожают самцы.","биология"],
+ ["Все рыбы-клоуны рождаются самцами. Главный в группе становится самкой.","биология"],
+ ["У морских звёзд нет мозга.","биология"],
+ ["Каракатицы видят поляризованный свет.","биология"],
+ ["Креветка-богомол бьёт так быстро, что вода вокруг вскипает пузырьками.","биология"],
+ ["Щелчок рака-щелкуна создаёт пузырь горячее 4000 °C.","Nature, 2001"],
+ ["Шёлк паука по весу прочнее стали.","биология"],
+ ["Паук Дарвина плетёт сети шириной до 25 метров через реки.","PLoS One, 2010"],
+ ["Прыгающие пауки прыгают с помощью гидравлики: резко нагнетают жидкость в лапы.","биология"],
+ ["Лягушки-древесницы зимой замерзают почти целиком, а весной оттаивают.","биология"],
+ ["Дельфины спят половиной мозга.","биология"],
+ ["Морские черепахи ориентируются по магнитному полю Земли.","биология"],
+ ["Лососи находят родную реку по запаху.","биология"],
+ ["Самец удильщика прирастает к самке и сливается с ней кровью.","биология"],
+ ["Гренландский кит живёт больше 200 лет.","биология"],
+ ["Голос кашалота — самый громкий звук среди животных.","биология"],
+ ["Сердце синего кита весит около 180 кг.","биология"],
+ ["Пингвины папуа дарят избраннице камешки.","биология"],
+ ["Императорские пингвины ныряют глубже 500 метров.","биология"],
+ ["Полярная крачка пролетает за год десятки тысяч километров — от Арктики до Антарктики и обратно.","PNAS, 2010"],
+ ["Кожа белого медведя чёрная, а мех прозрачный.","биология"],
+ ["Пот бегемота красноватый и работает как солнцезащитный крем.","Nature, 2004"],
+ ["Слоны не умеют прыгать.","биология"],
+ ["Слоны возвращаются к костям умерших сородичей и трогают их хоботом.","биология"],
+ ["У слонов около 20 копий гена-защитника от рака TP53. У людей — одна.","eLife, 2016"],
+ ["Белки сажают леса: часть закопанных орехов они так и не находят.","экология"],
+ ["Каланы спят, держась за лапы, чтобы их не разнесло течением.","биология"],
+ ["Отпечатки пальцев коал очень похожи на человеческие.","биология"],
+ ["Бабочки пробуют вкус лапками.","биология"],
+ ["Кошки не чувствуют сладкого: ген этого рецептора у них сломан.","PLoS Genetics, 2005"],
+ ["Кошки мурлычут на частоте примерно 25–150 Гц.","биология"],
+ ["Лошади и крысы не умеют тошнить.","биология"],
+ ["Нос собаки различает запахи в десятки тысяч раз лучше нашего.","биология"],
+ ["Шоколад ядовит для собак из-за теобромина.","ветеринария"],
+ ["Таракан может прожить без головы около недели.","биология"],
+ ["Язык колибри сам захлопывается вокруг капли нектара, как ловушка.","PNAS, 2011"],
+ /* --- человек --- */
+ ["У новорождённого около 300 костей, у взрослого 206.","анатомия"],
+ ["Утром ты примерно на сантиметр выше, чем вечером.","анатомия"],
+ ["Мозг весит около 2% тела, но тратит около 20% энергии.","физиология"],
+ ["Люди слабо светятся — в тысячу раз слабее, чем видит глаз.","PLoS One, 2009"],
+ ["В теле примерно столько же бактерий, сколько человеческих клеток.","PLoS Biology, 2016"],
+ ["ДНК из одной клетки, если её растянуть, имеет длину около 2 метров.","биология"],
+ ["У жителей Европы и Азии около 1–2% генов от неандертальцев.","Science, 2010"],
+ ["Зевота заразительна — даже для собак.","Biology Letters, 2008"],
+ ["Коленные чашечки у младенцев ещё хрящевые.","анатомия"],
+ ["Глаз человека различает около миллиона оттенков.","физиология"],
+ ["Кофеин бодрит, потому что блокирует рецепторы аденозина — «вещества усталости».","физиология"],
+ ["Желудок обновляет свою слизистую каждые несколько дней.","физиология"],
+  ["Музыка, от которой «мурашки», запускает выброс дофамина.","Nature Neuroscience, 2011"],
+ ["Сон очищает мозг: во сне жидкость быстрее вымывает отходы.","Science, 2013"],
+ /* --- Земля и растения --- */
+ ["Молния примерно в 5 раз горячее поверхности Солнца.","физика"],
+ ["В Землю ударяет около 45 молний в секунду.","NASA"],
+ ["Антарктида — самая большая пустыня на планете.","география"],
+ ["Сахара 6–11 тысяч лет назад была зелёной саванной с озёрами.","палеоклимат"],
+ ["Около половины кислорода на Земле дают морские микроорганизмы.","NOAA"],
+ ["Некоторые виды бамбука растут почти на метр в сутки.","ботаника"],
+ ["Крупнейший организм — грибница опёнка в Орегоне площадью почти 10 км².","Forest Service"],
+ ["Осиновая роща Пандо — одно дерево-клон весом около 6000 тонн.","ботаника"],
+ ["Банан с точки зрения ботаники — ягода, а клубника — нет.","ботаника"],
+ ["Арахис не орех, а бобовое растение.","ботаника"],
+ ["Бананы немного радиоактивны из-за калия-40.","физика"],
+ ["Вода при замерзании расширяется примерно на 9%.","физика"],
+ ["Самая низкая температура на Земле — −89,2 °C на станции «Восток».","WMO"],
+ ["Подсолнухи в юности поворачиваются за солнцем, потому что у них внутренние часы.","Science, 2016"],
+ ["Деревья в лесу не растут вплотную: кроны часто оставляют щели — «застенчивость крон».","ботаника"],
+ ["Сосна долгоживущая остистая в Калифорнии живёт больше 4800 лет.","ботаника"],
+ ["Семя финика возрастом 2000 лет проросло и дало дерево.","Science, 2008"],
+ ["Растения «слышат» жужжание пчёл и делают нектар слаще.","Ecology Letters, 2019"],
+ ["Мох может ожить после 1500 лет во льду Антарктиды.","Current Biology, 2014"],
+ ["Капли дождя не каплевидные, а похожи на булочку для гамбургера.","физика"],
+ ["Снежинок двух одинаковых найти практически невозможно.","физика"],
+ ["Горячий Гольфстрим переносит больше воды, чем все реки мира вместе.","океанология"],
+ ["Тихий океан шире Луны.","география"],
+ ["На Земле больше воды в атмосфере, чем во всех реках.","USGS"],
+ ["Луна стабилизирует наклон Земли, и климат меняется мягче.","астрономия"],
+ ["Если бы Земля была размером с яблоко, атмосфера была бы тоньше его кожуры.","NASA"],
+ ["Континенты расходятся со скоростью роста ногтей — несколько сантиметров в год.","геология"],
+ ["Гавайи приближаются к Японии примерно на 7–10 см в год.","геология"],
+ ["Нью-Йорк проседает под весом собственных зданий.","Earth's Future, 2023"],
+ ["Самые старые кристаллы на Земле — цирконы возрастом 4,4 млрд лет.","Nature, 2001"],
+  ["Озеро Байкал содержит около 20% всей пресной незамёрзшей воды на поверхности Земли.","UNESCO"],
+ ["Озёра под антарктическим льдом живут без солнца — там нашли бактерии.","Nature, 2014"],
+  ["Микробов глубоко под землёй по массе в сотни раз больше, чем всех людей.","Deep Carbon Observatory, 2018"],
+ ["Самое тихое место на Земле — безэховая камера: там слышно стук собственного сердца.","акустика"],
+ ["Медуз больше 500 миллионов лет — они старше динозавров и деревьев.","палеонтология"],
+ ["Цианобактерии наполнили атмосферу кислородом около 2,4 млрд лет назад.","геология"],
+ ["Секвойя может достигать 115 метров — выше статуи Свободы с постаментом.","ботаника"],
+ ["Головастик не теряет хвост, а «съедает» его изнутри, превращаясь в лягушку.","биология"],
+ ["Пауки-серебрянки живут под водой в пузыре воздуха, как в водолазном колоколе.","биология"],
+   ["В жару кенгуру облизывают передние лапы: испаряющаяся слюна их охлаждает.","биология"],
+ ["Стрекозы ловят до 95% добычи, за которой бросаются, — одни из лучших охотников на планете.","биология"],
+ ["Мухи видят мир в замедленной съёмке: они различают около 250 кадров в секунду.","Animal Behaviour, 2013"],
+ ["Гепард разгоняется до 100 км/ч быстрее многих машин.","биология"],
+ ["Сапсан в пике развивает больше 300 км/ч.","биология"],
+ ["Африканские серые попугаи понимают концепции «одинаковое» и «разное».","биология"],
+ ["Шимпанзе узнают себя в зеркале.","Science, 1970"],
+ ["Собаки понимают указательный жест человека лучше шимпанзе.","Science, 2002"],
+ ["Утята привязываются к первому движущемуся объекту, который видят.","этология"],
+ ["Луговые собачки «описывают» хищников разными звуками — даже цвет одежды человека.","Animal Behaviour, 2009"],
+ ["Овцы запоминают до 50 морд сородичей на два года.","Nature, 2001"],
+ ["Гавайский кальмар светится снизу с помощью бактерий, чтобы снизу его не было видно на фоне луны.","биология"],
+ ["У жирафа и мыши одинаковое число шейных позвонков — семь.","анатомия"]
+];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>s.toLowerCase().replace(/ё/g,"е").replace(/[^а-яa-z\-\s]/g," ").trim();
+const tokens=s=>norm(s).split(/\s+/).filter(Boolean);
+const stemOf=w=>{w=norm(w);return w.slice(0,Math.max(3,w.length-2))};
+const mskDate=(d=new Date())=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Moscow",year:"numeric",month:"2-digit",day:"2-digit"}).format(d);
+const dayNum=s=>Math.round(Date.parse(s+"T00:00:00Z")/864e5);
+const hash=s=>{let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
+const EASY_N=120; /* first 120 words are the easy set, the rest are harder */
+const pickWord=(seed,n)=>{const h=hash("pe"+seed+"|"+n), hard=(h>>>3)%2===1;
+  const lo=hard?EASY_N:0, hi=hard?WORDS.length:EASY_N; return WORDS[lo+h%(hi-lo)]};
+const fmtDay=s=>new Date(s+"T12:00:00Z").toLocaleDateString("ru-RU",{day:"numeric",month:"long",timeZone:"UTC"});
+function extraFor(){ /* a random fact, avoiding the last 20 shown on this device */
+  let seen=[];try{seen=JSON.parse(localStorage.getItem("playtime.seen")||"[]")}catch(e){}
+  let pool=EXTRAS.map((_,k)=>k).filter(k=>!seen.includes(k)); if(!pool.length) pool=EXTRAS.map((_,k)=>k);
+  const k=pool[Math.floor(Math.random()*pool.length)];
+  try{localStorage.setItem("playtime.seen",JSON.stringify([...seen,k].slice(-20)))}catch(e){}
+  return EXTRAS[k];
+}
+
+/* ---------- rules & points ---------- */
+const PTS={guesser:[5,3,1], sniper:1, writerFirst:2, writerOneWord:3}; /* guesser scores; writer only when clue 1 lands */
+const FUNC=new Set("по под подо про при пред перед передо после против посреди поверх позади помимо поперёк поперек подле путём путем пока покуда потому поскольку пусть пускай притом причём причем".split(" "));
+function checkClue(text,word,others){
+  const t=tokens(text);
+  if(!t.length) return {ok:false,msg:""};
+  const content=t.filter(w=>!FUNC.has(w));
+  if(!content.length) return {ok:false,msg:"Нужно хотя бы одно слово кроме предлогов"};
+  if(content.length>3) return {ok:false,msg:"Максимум 3 слова (предлоги не считаются)"};
+  const st=stemOf(word);
+  for(const w of t){
+    if(!/^п/.test(w)) return {ok:false,msg:`«${w}» не на П`};
+    if(FUNC.has(w)) continue;
+    if(w.length<2) return {ok:false,msg:`«${w}» слишком короткое`};
+    if(w.includes(st)||w.includes(norm(word))) return {ok:false,msg:`«${w}» однокоренное с загаданным`};
+    if(others.includes(w)) return {ok:false,msg:`«${w}» уже было`};
+  }
+  return {ok:true,msg:"всё на П",words:content};
+}
+function isHit(tok,word){word=norm(word);tok=norm(tok);return tok===word||(tok.startsWith(stemOf(word))&&Math.abs(tok.length-word.length)<=2)}
+function isHot(tok,word){return !isHit(tok,word)&&norm(tok).slice(0,3)===norm(word).slice(0,3)}
+function scoreRound(r){
+  const w={}; w[r.writer]=0; w[r.guesser]=0;
+  if(r.status==="solved"){w[r.guesser]=PTS.guesser[r.solvedAt]+(tokens(r.guesses[r.solvedAt]).length===1?PTS.sniper:0);
+    if(r.solvedAt===0) w[r.writer]=tokens((r.clues||[""])[0]).filter(x=>!FUNC.has(x)).length===1?PTS.writerOneWord:PTS.writerFirst}
+  return w;
+}
+
+/* ---------- state ----------
+   Two game contexts: LIVE (shared with your friend, synced) and TEST (local, you play both sides). */
+const mk=(mode)=>({mode,me:null,meta:null,rounds:{},names:{}});
+const LIVE=mk("live"), TEST=mk("test");
+const S={choice:null,myTag:"LS",view:"loading",G:LIVE,tab:"week",db:null,user:null,drafts:{},err:"",flash:null,liveOk:false};
+const today=()=>mskDate();
+const rid=n=>"r"+String(n).padStart(4,"0");
+function nameOf(id){const G=S.G;if(G.meta?.tags?.[id]) return G.meta.tags[id];if(G.mode==="test") return id==="ls"?"LS":"SH";
+  return id===G.me?S.myTag:(S.myTag==="LS"?"SH":"LS")}
+const nameIn=nameOf;
+function roundsList(G=S.G){return Object.values(G.rounds).filter(r=>typeof r.n==="number").sort((a,b)=>a.n-b.n)}
+function current(G=S.G){const l=roundsList(G);return l[l.length-1]}
+
+async function saveRound(r,G=S.G){
+  G.rounds[rid(r.n)]=r; render();
+  if(G.mode!=="live") return;
+  try{await FB.save(rid(r.n),r)}catch(e){S.err="Не получилось сохранить ход. Проверь интернет и попробуй ещё раз.";render()}
+}
+function makeRound(n,G){
+  const p=G.meta.players, writer=p[(n-1)%2], seed=G.meta.seed||"pe";
+  return {n,writer,guesser:p.find(x=>x!==writer),word:pickWord(seed+"#"+n,0),rerolled:false,clues:null,guesses:[],status:"writing",solvedAt:null,startedAt:today(),endedAt:null};
+}
+function ensureCurrent(G=S.G){
+  if(!G.meta||(G.meta.players||[]).length<2||G.creating) return;
+  const c=current(G);
+  if(!c||c.status==="solved"||c.status==="missed"){G.creating=true;saveRound(makeRound(c?c.n+1:1,G),G).finally(()=>G.creating=false)}
+}
+
+/* ---------- drawing ---------- */
+const STAR=(x,y,r,fill,cls="")=>`<path class="tw ${cls}" d="M${x} ${y-r}C${x+r*.12} ${y-r*.12} ${x+r*.12} ${y-r*.12} ${x+r} ${y}C${x+r*.12} ${y+r*.12} ${x+r*.12} ${y+r*.12} ${x} ${y+r}C${x-r*.12} ${y+r*.12} ${x-r*.12} ${y+r*.12} ${x-r} ${y}C${x-r*.12} ${y-r*.12} ${x-r*.12} ${y-r*.12} ${x} ${y-r}Z" fill="${fill}" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>`;
+const SPARK=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1C11 8 12 9 19 10C12 11 11 12 10 19C9 12 8 11 1 10C8 9 9 8 10 1Z" fill="currentColor"/></svg>`;
+function mascot(mode,who){
+  /* minimal black-and-white doodle cats (original): LS solid black, SH white outline */
+  const b=who==="LS", I="var(--ink)", W="#fff", F=b?I:W, D=b?W:I;
+  const line=(d,w=3,c=I)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const shape=(d)=>`<path d="${d}" fill="${F}" stroke="${I}" stroke-width="3" stroke-linejoin="round"/>`;
+  const tilt=mode==="guess"?-12:0, hx=100, hy=74;
+  /* face pieces, drawn in the head's own coordinates (centre 0,0) */
+  const dots=(r=3.4)=>`<circle cx="-12" cy="-2" r="${r}" fill="${D}"/><circle cx="12" cy="-2" r="${r}" fill="${D}"/>`;
+  const lash=b?"":line("M-17 -7l-4-3M17 -7l4-3",1.8);
+  let face;
+  if(mode==="wait") face=line("M-17 -2q5 4 10 0M7 -2q5 4 10 0",2.4,D)+(b?"":line("M-15 1l-1 3M15 1l1 3",1.6));
+  else if(mode==="win") face=line("M-17 0q5-6 10 0M7 0q5-6 10 0",2.4,D)+`<ellipse cx="0" cy="12" rx="5" ry="6" fill="${D}"/>`+lash;
+  else if(mode==="lose") face=`<circle cx="-12" cy="-2" r="6" fill="none" stroke="${D}" stroke-width="2.2"/><circle cx="12" cy="-2" r="6" fill="none" stroke="${D}" stroke-width="2.2"/><circle cx="-12" cy="-2" r="1.6" fill="${D}"/><circle cx="12" cy="-2" r="1.6" fill="${D}"/>`+line("M-6 13q3-3 6 0t6 0",2.2,D)+lash;
+  else if(mode==="write") face=`<circle cx="-12" cy="1" r="3.2" fill="${D}"/><circle cx="12" cy="1" r="3.2" fill="${D}"/>`+line("M-3 10l3 3 3-3",2.2,D)+lash;
+  else if(mode==="guess") face=`<circle cx="-11" cy="-4" r="3.2" fill="${D}"/><circle cx="13" cy="-4" r="3.2" fill="${D}"/>`+`<circle cx="0" cy="13" r="2.6" fill="none" stroke="${D}" stroke-width="2"/>`+lash;
+  else face=dots()+line("M-5 10q2.5 3 5 0q2.5 3 5 0",2.2,D)+lash;
+  const head=`<g transform="translate(${hx} ${hy}) rotate(${tilt})">${shape("M-30 10Q-32 -10 -24 -20L-26 -38L-10 -27Q0 -30 10 -27L26 -38L24 -20Q32 -10 30 10Q26 30 0 30Q-26 30 -30 10Z")}${line("M-30 8l-14-2M30 8l14-2",1.6,I)}${face}</g>`;
+  let art;
+  if(mode==="wait"){
+    art=shape("M38 150Q38 116 100 114Q162 116 162 150Q162 176 100 176Q38 176 38 150Z")+line("M150 168Q104 186 62 166",3)
+      +`<g transform="translate(70 138) scale(.8)">${shape("M-30 10Q-32 -10 -24 -20L-26 -38L-10 -27Q0 -30 10 -27L26 -38L24 -20Q32 -10 30 10Q26 30 0 30Q-26 30 -30 10Z")}${face}</g>`
+      +`<text x="132" y="104" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="700" font-size="22" fill="${I}">z</text><text x="148" y="88" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="700" font-size="14" fill="${I}">z</text>`;
+  } else {
+    const body=shape("M72 176Q66 130 82 104Q100 96 118 104Q134 130 128 176Z");
+    const tail=line("M128 170Q156 168 154 140",3);
+    const feet=line("M90 176v-8M110 176v-8",2.4,D);
+    let arms="", extra="";
+    if(mode==="win"){extra=line("M54 56l-7-6M62 42l-2-9M146 56l7-6M138 42l2-9",2.4)}
+    else if(mode==="write"){extra=""}
+    else if(mode==="guess"){extra=`<text x="134" y="56" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="700" font-size="34" fill="${I}">?</text>`}
+    else if(mode==="lose"){extra=`<path d="M144 54q5 8 0 12q-5-4 0-12z" fill="none" stroke="${I}" stroke-width="2"/>`+line("M52 58l6 4M48 70l7 1",2)}
+    art=tail+body+feet+arms+head+extra;
+  }
+  return `<svg class="mascot" viewBox="0 0 200 200" role="img" aria-label="${b?"Чёрная кошка LS":"Белая кошка SH"}">${art}</svg>`;
+}
+const ICON={
+  grid:`<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="2.5"/><rect x="13" y="3" width="8" height="8" rx="2.5"/><rect x="3" y="13" width="8" height="8" rx="2.5"/><rect x="13" y="13" width="8" height="8" rx="2.5"/></svg>`,
+  scroll:`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h15a3 3 0 0 1 3 3v2h-6"/><path d="M21 11v14a3 3 0 0 1-6 0v-2H5v2a3 3 0 0 0 3 3h10"/><path d="M9 6a3 3 0 0 0-3 3v14"/><path d="M10 12h6M10 16h6M10 20h3"/></svg>`,
+  dice:`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><rect x="5" y="5" width="22" height="22" rx="5"/><circle cx="11" cy="11" r="2" fill="currentColor"/><circle cx="21" cy="21" r="2" fill="currentColor"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>`,
+  cup:`<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5h12v8a6 6 0 0 1-12 0z" fill="var(--red)"/><path d="M10 8H5a4 4 0 0 0 5 5M22 8h5a4 4 0 0 1-5 5"/><path d="M16 19v5M11 27h10M13 24h6"/></svg>`
+};
+
+/* ---------- render ---------- */
+function totals(){
+  const G=S.G,t={},wk={};(G.meta?.players||[]).forEach(p=>{t[p]=0;wk[p]=0});
+  const now=today(),dn=dayNum(now),monday=dn-(new Date(now+"T12:00:00Z").getUTCDay()+6)%7;
+  for(const r of roundsList()){const s=scoreRound(r),d=r.endedAt||r.startedAt;for(const k in s){if(k in t){t[k]+=s[k];if(d&&dayNum(d)>=monday)wk[k]+=s[k]}}}
+  return S.tab==="week"?wk:t;
+}
+function idByTag(tag){const G=S.G;return (G.meta?.players||[]).find(p=>nameOf(p)===tag)}
+function scoreBar(){
+  const t=totals(), ls=idByTag("LS"), sh=idByTag("SH"), a=ls?t[ls]||0:0, b=sh?t[sh]||0:0, sum=a+b;
+  const w=sum?Math.max(6,Math.min(94,a/sum*100)):50, me=nameOf(S.G.me);
+  return `<div class="scorebar"><div class="track ${sum?"":"empty"}" role="img" aria-label="LS ${a}, SH ${b}"><div class="ls" style="width:${w}%"></div><div class="sh"></div></div>
+    <div class="scorelabels"><span class="${me==="LS"?"me":""}">LS ${a}</span><span class="${me==="SH"?"me":""}">SH ${b}</span></div>
+    <div class="tabs"><button data-tab="week" aria-pressed="${S.tab==="week"}">неделя</button><button data-tab="all" aria-pressed="${S.tab==="all"}">всё время</button></div></div>`;
+}
+function cluesBox(r,reveal){
+  const cl=r.clues||[], more=cl.length<3&&reveal>cl.length&&r.status==="guessing";
+  return `<div class="box">${cl.map((c,i)=>i<reveal
+    ?`<div class="clue"><span class="n">0${i+1}</span><span class="t">${esc(c)}</span></div>`
+    :`<div class="clue locked"><span class="n">0${i+1}</span><span class="t">скрыто</span></div>`).join("")}${more?`<div class="clue locked"><span class="n">—</span><span class="t">больше подсказок нет</span></div>`:""}${r.guesses.length?r.guesses.map((g,i)=>`<div class="guess"><span class="n">${i+1}</span><div class="tags">${g.split(" ").map(w=>{
+    const c=isHit(w,r.word)?"win":isHot(w,r.word)?"hot":"";return `<span class="tag ${c}">${esc(w)}</span>`}).join("")}</div></div>`).join(""):""}</div>`;
+}
+const dots=r=>`<div class="dots" aria-label="Попытки">${[0,1,2].map(i=>`<span class="${r.status==="solved"&&r.solvedAt===i?"win":i<r.guesses.length?"used":""}"></span>`).join("")}</div>`;
+const cta=(act,label,dis)=>`<button class="cta" data-act="${act}" ${dis?"disabled":""}>${SPARK}<span>${label}</span>${SPARK}</button>`;
+function tools(){return `<div class="tools"><button class="tool" data-sheet="rules">${ICON.scroll}Правила</button><button class="tool" data-sheet="history">${ICON.cup}История</button></div>`}
+function topBar(n){
+  return `<div class="top"><button class="sq" data-sheet="history" aria-label="История">${ICON.grid}</button>
+    <div class="mid"><b>Play Time</b><span>${n?`раунд ${n} ↑`:"на букву П"}</span></div>
+    <button class="circ ${nameOf(S.G.me)==="SH"?"white":""}" data-sheet="cat" aria-label="Моя кошка">${esc(nameOf(S.G.me)||"?")}</button></div>`;
+}
+function stage(r){
+  const me=S.G.me,isW=me===r.writer,isG=me===r.guesser;
+  if(!isW&&!isG) return {m:"wait",h:`<h1>${esc(nameOf(r.writer))} → ${esc(nameOf(r.guesser))}</h1>`,b:""};
+  if(isW&&!r.clues){
+    const k="c"+r.n, d=S.drafts[k]||(S.drafts[k]=["","",""]);
+    return {m:"write",round:r.n,h:`<h1>Загадай слово</h1><div class="secret"><span class="word">${esc(r.word)}</span>${(r.rerolls??(r.rerolled?1:0))>=2?"":`<button class="link" data-act="reroll" data-n="${r.n}">другое слово · осталось ${2-(r.rerolls??(r.rerolled?1:0))}</button>`}</div>
+      <span class="sub">до 3 слов в подсказке · всё на «П» · предлоги не считаются</span>`,
+      b:`<div class="fields">${[0,1,2].map(i=>`<div class="field"><label for="c-${r.n}-${i}">Подсказка 0${i+1}<span>${i?"по желанию":"обязательно"}</span></label>
+        <input type="text" id="c-${r.n}-${i}" data-clue="${i}" value="${esc(d[i])}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${["пушистая привереда","птичек преследует","подоконник предпочитает"][i]}">
+        <p class="hint" id="h-${r.n}-${i}"></p></div>`).join("")}</div>${cta("send","Отправить",true)}`};
+  }
+  if(isW) return {m:"wait",h:`<h1>Ждём ${esc(nameOf(r.guesser))}</h1><span class="sub">твоё слово: <b>${esc(r.word)}</b></span>${dots(r)}`,b:cluesBox(r,3)};
+  if(!r.clues) return {m:"wait",h:`<h1>${esc(nameOf(r.writer))} пишет</h1><span class="sub">подсказки скоро будут</span>`,b:""};
+  const n=r.guesses.length;
+  return {m:"guess",round:r.n,h:`<h1>Отгадай слово</h1><span class="sub">попытка <b>${n+1}</b> из 3 · до 3 слов</span>${dots(r)}`,
+    b:cluesBox(r,n+1)+`<div class="field"><label for="g-${r.n}">Твой вариант<span>одним словом +1</span></label>
+      <input type="text" id="g-${r.n}" data-guess autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(S.drafts["g"+r.n]||"")}" placeholder="кошка кот котёнок"><p class="hint"></p></div>${cta("guess","Проверить")}`};
+}
+function prevLine(p){
+  if(!p||(p.status!=="solved"&&p.status!=="missed")) return "";
+  const s=scoreRound(p);
+  return `<button class="prev" data-sheet="history" style="cursor:pointer;background:none;text-align:left;width:100%"><span>прошлый · №${p.n}<br><b>${esc(p.word)}</b></span><span>${esc(nameOf(p.guesser))} +${s[p.guesser]}${s[p.writer]?` · ${esc(nameOf(p.writer))} +${s[p.writer]}`:""}</span></button>`;
+}
+function peekCat(tag){
+  /* first screen: minimal doodle cat peeking over a line */
+  const b=tag==="LS", I="var(--ink)", W="#fff", F=b?I:W, D=b?W:I;
+  const line=(d,w=3,c=I)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  return `<svg viewBox="0 0 200 150" role="img" aria-label="${b?"Чёрная кошка LS":"Белая кошка SH"}">
+    <path d="M50 130Q46 92 62 76L58 46L82 64Q100 58 118 64L142 46L138 76Q154 92 150 130Z" fill="${F}" stroke="${I}" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="86" cy="96" r="4" fill="${D}"/><circle cx="114" cy="96" r="4" fill="${D}"/>${b?"":line("M81 90l-4-3M119 90l4-3",1.8)}
+    ${line("M95 108q2.5 3 5 0q2.5 3 5 0",2.2,D)}${line("M50 108l-18-2M150 108l18-2",1.6)}
+    <rect x="0" y="130" width="200" height="20" fill="#fff"/>${line("M6 130H194",3)}
+    <path d="M64 131q0-11 11-11q11 0 11 11" fill="${F}" stroke="${I}" stroke-width="3"/><path d="M114 131q0-11 11-11q11 0 11 11" fill="${F}" stroke="${I}" stroke-width="3"/>
+  </svg>`;
+}
+function loginScreen(){
+  const takenBy=()=>false;
+  const card=tag=>`<button data-pick="${tag}" ${takenBy(tag)?"disabled":""} aria-label="${tag==="LS"?"Чёрная кошка LS":"Белая кошка SH"}">${peekCat(tag)}<b>${tag}</b></button>`;
+  return `<div class="login"><div class="pick">${card("LS")}${card("SH")}</div>${S.err?`<div class="err">${esc(S.err)}</div>`:""}</div>`;
+}
+function render(){
+  if(S.view==="loading") return;
+  const G=S.G, app=$("#app");
+  if(!S.choice&&!(G.mode==="live"&&!G.meta)){app.innerHTML=loginScreen();bind();return}
+  const strip="";
+  const err=S.err&&G.mode==="live"?`<div class="err">${esc(S.err)}</div>`:"";
+  if(G.mode==="live"&&!G.meta){app.innerHTML=topBar()+`<div class="hero">${mascot("wait",nameOf(S.G.me))}<h1>Открываем…</h1></div>`;return}
+  const players=G.meta?.players||[];
+  if(G.mode==="live"&&!players.includes(G.me)&&players.length<2){app.innerHTML=loginScreen();bind();return}
+  if(G.mode==="live"&&!players.includes(G.me)){
+    const free=players.length<2;
+    app.innerHTML=topBar()+err+`<div class="hero">${mascot(free?"idle":"wait",S.myTag)}<h1>${free?"Сыграем?":"Тут уже двое"}</h1>
+      <span class="sub">${free?"первые двое, кто нажмёт, играют":"только просмотр"}</span></div>${free?cta("join","Играть"):""}${tools()}`;
+    bind(); return;
+  }
+  if(players.length<2){
+    app.innerHTML=topBar()+strip+err+`<div class="hero">${mascot("wait",nameOf(S.G.me))}<h1>Ждём ${S.myTag==="LS"?"SH":"LS"}</h1><span class="sub">отправь ссылку</span></div>${tools()}`;
+    bind(); return;
+  }
+  const c=current(G), l=roundsList(G), prev=l.length>1?l[l.length-2]:null;
+  if(!c){app.innerHTML=topBar()+`<div class="hero">${mascot("idle",nameOf(S.G.me))}<h1>Достаём слово…</h1></div>`;return}
+  const st=stage(c);
+  app.innerHTML=topBar(c.n)+strip+err+`<div class="hero">${mascot(st.m,nameOf(S.G.me))}${st.h}</div>`+
+    (st.round?`<div data-round="${st.round}" style="display:flex;flex-direction:column;gap:16px">${st.b}</div>`:st.b)+
+    scoreBar()+prevLine(prev)+tools();
+  bind(); validateAll();
+}
+
+/* ---------- sheets ---------- */
+function openSheet(kind){
+  const el=$("#sheet"); let h="";
+  if(kind==="rules") h=`<div class="hd"><h2>Правила</h2><button class="x" data-close aria-label="Закрыть">✕</button></div>
+    <p>Ходы по очереди, без таймера. В каждом раунде одно слово загадывают, другое — отгадывают, в следующем раунде роли меняются.</p>
+    <p><b>Подсказки:</b> 1–3, в каждой до 3 слов, все на «П». Предлоги и союзы на «П» (по, под, про, при, пока, пусть…) не считаются. Слово можно заменить 2 раза.</p>
+    <p><b>Догадки:</b> 3 попытки, до 3 слов в каждой. Промах открывает следующую подсказку.</p>
+    <table><thead><tr><th>За отгадку</th><th class="r">Очки</th></tr></thead><tbody>
+      <tr><td>С 1-й попытки</td><td class="r">+${PTS.guesser[0]}</td></tr><tr><td>Со 2-й</td><td class="r">+${PTS.guesser[1]}</td></tr>
+      <tr><td>С 3-й</td><td class="r">+${PTS.guesser[2]}</td></tr><tr><td>Одним словом</td><td class="r">+${PTS.sniper}</td></tr></tbody></table>
+    <table><thead><tr><th>За подсказки</th><th class="r">Очки</th></tr></thead><tbody>
+      <tr><td>Отгадка с 1-й подсказки</td><td class="r">+${PTS.writerFirst}</td></tr><tr><td>…если в ней одно слово</td><td class="r">+${PTS.writerOneWord}</td></tr>
+      <tr><td>Иначе</td><td class="r">0</td></tr></tbody></table>`;
+  if(kind==="history"){
+    const list=roundsList().filter(r=>r.status==="solved"||r.status==="missed").reverse().slice(0,50);
+    h=`<div class="hd"><h2>История</h2><button class="x" data-close aria-label="Закрыть">✕</button></div>`+(list.length?list.map(r=>{const s=scoreRound(r);return `<div class="hitem">
+      <span class="w">${esc(r.word)}${r.status==="missed"?" ✕":""}</span><span class="d">№${r.n} · ${fmtDay(r.endedAt||r.startedAt)}</span>
+      <span class="c">${(r.clues||[]).map(esc).join(" / ")}</span>
+      <span class="c">${esc(nameOf(r.guesser))} +${s[r.guesser]}${s[r.writer]?` · ${esc(nameOf(r.writer))} +${s[r.writer]}`:""}</span></div>`}).join(""):`<p>Пока пусто.</p>`);
+  }
+  if(kind==="cat"){
+    h=`<div class="hd"><h2>Моя кошка</h2><button class="x" data-close aria-label="Закрыть">✕</button></div>
+      <div style="width:140px;align-self:center">${mascot("idle",nameOf(S.G.me))}</div>
+      <p style="text-align:center">На этом телефоне: <b>${esc(nameOf(S.G.me)||"—")}</b></p>
+      <button class="cta light" data-act="recat"><span></span><span>Сменить кошку</span><span></span></button>`;
+  }
+  el.innerHTML=`<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true">${h}</div></div>`;
+  el.hidden=false; bind();
+  el.querySelector("[data-scrim]").onclick=e=>{if(e.target.hasAttribute("data-scrim"))closeSheet()};
+}
+function closeSheet(){const el=$("#sheet");el.hidden=true;el.innerHTML=""}
+
+/* ---------- celebration screens ---------- */
+function showOverlay(o){
+  const el=$("#ov"); let h="";
+  const letters=w=>[...w].map((c,i)=>`<span style="animation-delay:${200+i*45}ms">${esc(c)}</span>`).join("");
+  if(o.kind==="sent"){
+    const line=extraFor(today(),o.me);
+    h=`${mascot("win",nameOf(S.G.me))}<span class="kick">Подсказки улетели</span><div class="big">${letters("Готово!")}</div>
+      <div class="box sentclues">${o.clues.map((c,i)=>`<div class="clue"><span class="n">0${i+1}</span><span class="t">${esc(c)}</span></div>`).join("")}</div>
+      <div class="fact"><span class="k">Факт</span><p>${esc(line[0])}</p><span class="s">${esc(line[1])}</span></div>`;
+  } else if(o.kind==="won"){
+    h=`${mascot("win",nameOf(S.G.me))}<span class="kick">С ${o.at+1}-й попытки${o.sniper?" · одним словом":""}</span><div class="big">${letters(o.word)}</div>
+      <div class="pts"><span class="chip lemon">тебе +${o.mine}</span>${o.theirs?`<span class="chip tomato">${esc(o.otherName)} +${o.theirs}</span>`:""}</div>`;
+  } else {
+    h=`${mascot("lose",nameOf(S.G.me))}<span class="kick">Не угадано</span><div class="big">${letters(o.word)}</div><div class="pts"><span class="chip">+0 · следующий ход твой</span></div>`;
+  }
+  el.innerHTML=`<div class="in">${h}${cta("ovclose","Дальше")}</div>`;
+  el.hidden=false; document.body.style.overflow="hidden";
+  const b=el.querySelector('[data-act="ovclose"]');
+  b.onclick=()=>{el.hidden=true;el.innerHTML="";document.body.style.overflow="";scrollTo(0,0)};
+  b.focus({preventScroll:true});
+}
+
+/* ---------- interactions ---------- */
+const roundOf=n=>S.G.rounds[rid(+n)];
+function validateAll(){
+  document.querySelectorAll("[data-round]").forEach(sec=>{
+    const r=roundOf(sec.dataset.round); if(!r||r.clues) return;
+    let allOk=true; const used=[];
+    sec.querySelectorAll("[data-clue]").forEach((inp,i)=>{
+      const empty=!tokens(inp.value).length, res=(i>0&&empty)?{ok:true,msg:"",words:[]}:checkClue(inp.value,r.word,used), hint=document.getElementById(`h-${r.n}-${i}`);
+      if(i===0&&empty) allOk=false;
+      if(res.ok) used.push(...res.words); else allOk=false;
+      hint.textContent=res.msg; hint.className="hint "+(res.ok&&res.msg?"ok":res.msg?"bad":"");
+      inp.classList.toggle("bad",!res.ok&&!!res.msg);
+    });
+    const b=sec.querySelector('[data-act="send"]'); if(b) b.disabled=!allOk;
+  });
+}
+function bind(){
+  document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;render()});
+  document.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>pickCat(b.dataset.pick));
+  document.querySelectorAll("[data-sheet]").forEach(b=>b.onclick=()=>openSheet(b.dataset.sheet));
+  document.querySelectorAll("[data-close]").forEach(b=>b.onclick=closeSheet);
+  document.querySelectorAll("[data-clue]").forEach(inp=>inp.oninput=()=>{S.drafts["c"+inp.closest("[data-round]").dataset.round][+inp.dataset.clue]=inp.value;validateAll()});
+  document.querySelectorAll("[data-guess]").forEach(inp=>{const n=inp.closest("[data-round]").dataset.round;
+    inp.oninput=()=>{S.drafts["g"+n]=inp.value};
+    inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();doGuess(n)}}});
+  document.querySelectorAll("[data-act]").forEach(b=>{if(b.dataset.act==="ovclose")return;b.onclick=()=>{
+    const n=b.dataset.n||b.closest("[data-round]")?.dataset.round, a=b.dataset.act, r=n&&roundOf(n);
+    if(a==="join") join();
+    if(a==="recat"){S.choice=null;store.set(null);LIVE.me=null;closeSheet();render()}
+    if(a==="test"){if(!S.choice){S.choice=S.myTag||"LS"} if(!TEST.meta) resetTest(); S.G=TEST; closeSheet(); render(); scrollTo(0,0)}
+    if(a==="exit"){S.G=LIVE; closeSheet(); render(); scrollTo(0,0)}
+    if(a==="reset"){resetTest(); Object.keys(S.drafts).forEach(k=>delete S.drafts[k]); closeSheet(); render()}
+    if(a==="swap"){TEST.me=TEST.me==="ls"?"sh":"ls"; closeSheet(); render(); scrollTo(0,0)}
+    if(a==="reroll"){const k=(r.rerolls??(r.rerolled?1:0))+1; if(k<=2) saveRound({...r,word:pickWord((S.G.meta.seed||"pe")+"#"+r.n,k),rerolls:k,rerolled:true})}
+    if(a==="send"){const cl=S.drafts["c"+n].map(c=>tokens(c).join(" ")).filter(Boolean);saveRound({...r,clues:cl,status:"guessing"});showOverlay({kind:"sent",clues:cl,me:S.G.me})}
+    if(a==="guess") doGuess(n);
+  }});
+}
+function doGuess(n){
+  const G=S.G, r=roundOf(n), inp=document.getElementById("g-"+n), all=tokens(inp.value);
+  if(!all.length) return;
+  if(all.length>3){const h=inp.nextElementSibling;h.textContent="максимум три слова";h.className="hint bad";return}
+  const guesses=[...r.guesses,all.join(" ")], i=guesses.length-1, next={...r,guesses};
+  if(all.some(w=>isHit(w,r.word))){next.status="solved";next.solvedAt=i;next.endedAt=today()}
+  else if(guesses.length>=3){next.status="missed";next.endedAt=today()}
+  S.drafts["g"+n]="";
+  if(next.status!=="guessing"){const sc=scoreRound(next);
+    showOverlay({kind:next.status==="solved"?"won":"lost",word:r.word,at:i,sniper:next.status==="solved"&&all.length===1,mine:sc[r.guesser],theirs:sc[r.writer],otherName:nameOf(r.writer)})}
+  saveRound(next,G).then(()=>ensureCurrent(G));
+}
+
+/* ---------- test mode (local, both sides) ---------- */
+function resetTest(){
+  TEST.me=S.choice==="SH"?"sh":"ls"; TEST.names={}; TEST.rounds={}; TEST.creating=false;
+  TEST.meta={players:["ls","sh"],tags:{ls:"LS",sh:"SH"},seed:"test"+Date.now()};
+  ensureCurrent(TEST);
+}
+
+/* ---------- live (Supabase) ---------- */
+const store={get(){try{return localStorage.getItem("peshka.cat")}catch(e){return null}},
+  set(v){try{v?localStorage.setItem("peshka.cat",v):localStorage.removeItem("peshka.cat")}catch(e){}}};
+const FB={url:null,key:null,code:null,timer:null,
+  /* Supabase REST: one table "rounds" (game, id, data). Polls every 4 s and when the app comes back to the screen. */
+  async init(){
+    const cfg=window.PLAYTIME_CONFIG||{};
+    if(!cfg.supabaseUrl||!cfg.supabaseKey||String(cfg.supabaseUrl).includes("ВСТАВЬ")) return false;
+    this.url=String(cfg.supabaseUrl).replace(/\/+$/,""); this.key=cfg.supabaseKey;
+    this.code=(cfg.gameCode||"playtime").replace(/[^A-Za-z0-9_-]/g,""); return true;
+  },
+  h(){return {apikey:this.key,Authorization:"Bearer "+this.key,"Content-Type":"application/json"}},
+  async save(id,r){
+    const res=await fetch(this.url+"/rest/v1/rounds?on_conflict=game,id",{method:"POST",headers:{...this.h(),Prefer:"resolution=merge-duplicates,return=minimal"},
+      body:JSON.stringify({game:this.code,id,data:r})});
+    if(!res.ok) throw new Error("save "+res.status);
+  },
+  watch(cb,err){
+    const pull=async()=>{try{
+      const res=await fetch(this.url+"/rest/v1/rounds?select=id,data&game=eq."+encodeURIComponent(this.code),{headers:this.h(),cache:"no-store"});
+      if(!res.ok) throw {code:"HTTP "+res.status};
+      const rows=await res.json(); cb({docs:rows.map(x=>({id:x.id,data:()=>x.data}))});
+    }catch(e){err&&err(e)}};
+    pull(); this.timer=setInterval(()=>{if(!document.hidden)pull()},4000);
+    document.addEventListener("visibilitychange",()=>{if(!document.hidden)pull()});
+  }
+};
+function pickCat(tag){
+  S.err=""; S.choice=tag; S.myTag=tag; store.set(tag);
+  LIVE.me=tag; TEST.me=tag==="LS"?"ls":"sh";
+  if(S.liveOk) ensureCurrent(LIVE);
+  render(); scrollTo(0,0);
+}
+async function join(){ render() }
+function startLive(){
+  LIVE.me=S.choice; LIVE.meta={players:["LS","SH"],tags:{LS:"LS",SH:"SH"},seed:FB.code};
+  S.liveOk=true; S.G=LIVE; S.view="ready";
+  let got=false; const timer=setTimeout(()=>{if(!got){S.err="Нет связи с базой. Проверь интернет.";render()}},10000);
+  FB.watch(snap=>{got=true;clearTimeout(timer);if(S.err.startsWith("Нет связи"))S.err="";
+      LIVE.rounds={};snap.docs.forEach(d=>{const v=d.data();if(v&&typeof v.n==="number")LIVE.rounds[d.id]=v});
+      if(LIVE.me) ensureCurrent(LIVE); render()},
+    e=>{S.err="База не отвечает ("+(e&&e.code||"нет связи")+"). Проверь интернет и config.js.";render()});
+  render();
+}
+function startTestOnly(){resetTest(); S.G=TEST; S.view="ready"; render()}
+(()=>{const c=store.get(); if(c==="LS"||c==="SH"){S.choice=c;S.myTag=c}})();
+(async()=>{
+  let ok=false; try{ok=await FB.init()}catch(e){ok=false}
+  if(ok) startLive();
+  else document.getElementById("app").innerHTML=`<div class="login"><h1>Play Time</h1><p class="sub" style="max-width:30ch;line-height:1.5">Приложение ещё не подключено к базе. Заполни файл config.js по инструкции и загрузи его на GitHub заново.</p></div>`;
+})();
+</script>
+</body>
+</html>
