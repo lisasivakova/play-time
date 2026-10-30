@@ -765,10 +765,11 @@ const FB={url:null,key:null,code:null,timer:null,
   async init(){
     const cfg=window.PLAYTIME_CONFIG||{};
     if(!cfg.supabaseUrl||!cfg.supabaseKey||String(cfg.supabaseUrl).includes("ВСТАВЬ")) return false;
-    this.url=String(cfg.supabaseUrl).replace(/\/+$/,""); this.key=cfg.supabaseKey;
+    this.url=String(cfg.supabaseUrl).trim().replace(/\/+$/,"").replace(/\/rest\/v1$/,""); this.key=String(cfg.supabaseKey).trim();
     this.code=(cfg.gameCode||"playtime").replace(/[^A-Za-z0-9_-]/g,""); return true;
   },
-  h(){return {apikey:this.key,Authorization:"Bearer "+this.key,"Content-Type":"application/json"}},
+  /* new-style keys (sb_publishable_…) go only in "apikey"; old JWT anon keys (eyJ…) also go in Authorization */
+  h(){const o={apikey:this.key,"Content-Type":"application/json"}; if(/^eyJ/.test(this.key)) o.Authorization="Bearer "+this.key; return o},
   async save(id,r){
     const res=await fetch(this.url+"/rest/v1/rounds?on_conflict=game,id",{method:"POST",headers:{...this.h(),Prefer:"resolution=merge-duplicates,return=minimal"},
       body:JSON.stringify({game:this.code,id,data:r})});
