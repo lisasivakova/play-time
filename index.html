@@ -618,6 +618,12 @@ function loginScreen(){
   return `<div class="login"><div class="pick">${card("LS")}${card("SH")}</div>${S.err?`<div class="err">${esc(S.err)}</div>`:""}</div>`;
 }
 function render(){
+  /* keep the field being typed in focused, with the cursor where it was */
+  const ae=document.activeElement, keep=ae&&ae.tagName==="INPUT"&&ae.id?{id:ae.id,a:ae.selectionStart,b:ae.selectionEnd}:null;
+  renderInner();
+  if(keep){const el=document.getElementById(keep.id); if(el&&document.activeElement!==el){el.focus({preventScroll:true}); try{el.setSelectionRange(keep.a,keep.b)}catch(e){}}}
+}
+function renderInner(){
   if(S.view==="loading") return;
   const G=S.G, app=$("#app");
   if(!S.choice&&!(G.mode==="live"&&!G.meta)){app.innerHTML=loginScreen();bind();return}
@@ -796,7 +802,10 @@ function startLive(){
   LIVE.me=S.choice; LIVE.meta={players:["LS","SH"],tags:{LS:"LS",SH:"SH"},seed:FB.code};
   S.liveOk=true; S.G=LIVE; S.view="ready";
   let got=false; const timer=setTimeout(()=>{if(!got){S.err="Нет связи с базой. Проверь интернет.";render()}},10000);
-  FB.watch(snap=>{got=true;clearTimeout(timer);if(S.err.startsWith("Нет связи"))S.err="";
+  let lastSig="";
+  FB.watch(snap=>{got=true;clearTimeout(timer);const hadErr=!!S.err;if(S.err.startsWith("Нет связи")||S.err.startsWith("База не отвечает"))S.err="";
+      const sig=JSON.stringify(snap.docs.map(d=>[d.id,d.data()]).sort((x,y)=>x[0]<y[0]?-1:1));
+      if(sig===lastSig&&!hadErr) return; lastSig=sig;
       LIVE.rounds={};snap.docs.forEach(d=>{const v=d.data();if(v&&typeof v.n==="number")LIVE.rounds[d.id]=v});
       if(LIVE.me) ensureCurrent(LIVE); render()},
     e=>{S.err="База не отвечает ("+(e&&e.code||"нет связи")+"). Проверь интернет и config.js.";render()});
