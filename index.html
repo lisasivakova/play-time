@@ -92,9 +92,9 @@ body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{display:flex;justify-content:space-between;font:800 11.5px var(--mono);text-transform:uppercase;letter-spacing:.04em}
 .field label span{color:var(--ink-3);font-weight:500;text-transform:none;letter-spacing:0}
-input[type=text]{width:100%;font:700 18px var(--display);color:var(--ink);background:var(--card);border:2.5px solid var(--ink);border-radius:16px;padding:12px 14px;outline:none}
-input[type=text]::placeholder{color:var(--ink-3);font-weight:500}
-input[type=text]:focus{box-shadow:4px 4px 0 var(--ink)}
+input[type=text],textarea.field-in{width:100%;resize:none;overflow:hidden;line-height:1.25;height:52px;display:block;font:700 18px var(--display);color:var(--ink);background:var(--card);border:2.5px solid var(--ink);border-radius:16px;padding:12px 14px;outline:none}
+input[type=text]::placeholder,textarea.field-in::placeholder{color:var(--ink-3);font-weight:500}
+input[type=text]:focus,textarea.field-in:focus{box-shadow:4px 4px 0 var(--ink)}
 input.bad{background:var(--red-soft);border-color:var(--red)}
 .hint{font:500 11.5px var(--mono);min-height:16px;margin:0;color:var(--ink-2)}
 .hint.bad{color:var(--red)}.hint.ok{color:var(--ink-2)}.hint.ok::before{content:"✓ "}
@@ -575,7 +575,7 @@ function tools(){return `<div class="tools"><button class="tool" data-sheet="rul
 function topBar(n){
   return `<div class="top"><button class="sq" data-sheet="history" aria-label="История">${ICON.grid}</button>
     <div class="mid"><b>Play Time</b><span>${n?`раунд ${n} ↑`:"на букву П"}</span></div>
-    <button class="circ ${nameOf(S.G.me)==="SH"?"white":""}" data-sheet="cat" aria-label="Моя кошка">${esc(nameOf(S.G.me)||"?")}</button></div>`;
+    <span class="circ ${nameOf(S.G.me)==="SH"?"white":""}" role="img" aria-label="Моя кошка: ${esc(nameOf(S.G.me)||"")}">${esc(nameOf(S.G.me)||"?")}</span></div>`;
 }
 function stage(r){
   const me=S.G.me,isW=me===r.writer,isG=me===r.guesser;
@@ -585,7 +585,7 @@ function stage(r){
     return {m:"write",round:r.n,h:`<h1>Загадай слово</h1><div class="secret"><span class="word">${esc(r.word)}</span>${(r.rerolls??(r.rerolled?1:0))>=2?"":`<button class="link" data-act="reroll" data-n="${r.n}">другое слово · осталось ${2-(r.rerolls??(r.rerolled?1:0))}</button>`}</div>
       <span class="sub">до 3 слов в подсказке · всё на «П» · предлоги не считаются</span>`,
       b:`<div class="fields">${[0,1,2].map(i=>`<div class="field"><label for="c-${r.n}-${i}">Подсказка 0${i+1}<span>${i?"по желанию":"обязательно"}</span></label>
-        <input type="text" id="c-${r.n}-${i}" data-clue="${i}" value="${esc(d[i])}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${["пушистая привереда","птичек преследует","подоконник предпочитает"][i]}">
+        <textarea class="field-in" id="c-${r.n}-${i}" data-clue="${i}" name="pt-clue-${i}-x" rows="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-autocomplete="none" data-1p-ignore data-lpignore="true" placeholder="${["пушистая привереда","птичек преследует","подоконник предпочитает"][i]}">${esc(d[i])}</textarea>
         <p class="hint" id="h-${r.n}-${i}"></p></div>`).join("")}</div>${cta("send","Отправить",true)}`};
   }
   if(isW) return {m:"wait",h:`<h1>Ждём ${esc(nameOf(r.guesser))}</h1><span class="sub">твоё слово: <b>${esc(r.word)}</b></span>${dots(r)}`,b:cluesBox(r,3)};
@@ -593,7 +593,7 @@ function stage(r){
   const n=r.guesses.length;
   return {m:"guess",round:r.n,h:`<h1>Отгадай слово</h1><span class="sub">попытка <b>${n+1}</b> из 3 · до 3 слов</span>${dots(r)}`,
     b:cluesBox(r,n+1)+`<div class="field"><label for="g-${r.n}">Твой вариант<span>одним словом +1</span></label>
-      <input type="text" id="g-${r.n}" data-guess autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(S.drafts["g"+r.n]||"")}" placeholder="кошка кот котёнок"><p class="hint"></p></div>${cta("guess","Проверить")}`};
+      <textarea class="field-in" id="g-${r.n}" data-guess name="pt-guess-x" rows="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-autocomplete="none" data-1p-ignore data-lpignore="true" placeholder="кошка кот котёнок">${esc(S.drafts["g"+r.n]||"")}</textarea><p class="hint"></p></div>${cta("guess","Проверить")}`};
 }
 function prevLine(p){
   if(!p||(p.status!=="solved"&&p.status!=="missed")) return "";
@@ -619,7 +619,7 @@ function loginScreen(){
 }
 function render(){
   /* keep the field being typed in focused, with the cursor where it was */
-  const ae=document.activeElement, keep=ae&&ae.tagName==="INPUT"&&ae.id?{id:ae.id,a:ae.selectionStart,b:ae.selectionEnd}:null;
+  const ae=document.activeElement, keep=ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")&&ae.id?{id:ae.id,a:ae.selectionStart,b:ae.selectionEnd}:null;
   renderInner();
   if(keep){const el=document.getElementById(keep.id); if(el&&document.activeElement!==el){el.focus({preventScroll:true}); try{el.setSelectionRange(keep.a,keep.b)}catch(e){}}}
 }
@@ -671,12 +671,6 @@ function openSheet(kind){
       <span class="c">${(r.clues||[]).map(esc).join(" / ")}</span>
       <span class="c">${esc(nameOf(r.guesser))} +${s[r.guesser]}${s[r.writer]?` · ${esc(nameOf(r.writer))} +${s[r.writer]}`:""}</span></div>`}).join(""):`<p>Пока пусто.</p>`);
   }
-  if(kind==="cat"){
-    h=`<div class="hd"><h2>Моя кошка</h2><button class="x" data-close aria-label="Закрыть">✕</button></div>
-      <div style="width:140px;align-self:center">${mascot("idle",nameOf(S.G.me))}</div>
-      <p style="text-align:center">На этом телефоне: <b>${esc(nameOf(S.G.me)||"—")}</b></p>
-      <button class="cta light" data-act="recat"><span></span><span>Сменить кошку</span><span></span></button>`;
-  }
   el.innerHTML=`<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true">${h}</div></div>`;
   el.hidden=false; bind();
   el.querySelector("[data-scrim]").onclick=e=>{if(e.target.hasAttribute("data-scrim"))closeSheet()};
@@ -726,14 +720,14 @@ function bind(){
   document.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>pickCat(b.dataset.pick));
   document.querySelectorAll("[data-sheet]").forEach(b=>b.onclick=()=>openSheet(b.dataset.sheet));
   document.querySelectorAll("[data-close]").forEach(b=>b.onclick=closeSheet);
-  document.querySelectorAll("[data-clue]").forEach(inp=>inp.oninput=()=>{S.drafts["c"+inp.closest("[data-round]").dataset.round][+inp.dataset.clue]=inp.value;validateAll()});
+  document.querySelectorAll("[data-clue]").forEach(inp=>inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();inp.blur()}});
+  document.querySelectorAll("[data-clue]").forEach(inp=>inp.oninput=()=>{if(/\n/.test(inp.value))inp.value=inp.value.replace(/\n/g," ");S.drafts["c"+inp.closest("[data-round]").dataset.round][+inp.dataset.clue]=inp.value;validateAll()});
   document.querySelectorAll("[data-guess]").forEach(inp=>{const n=inp.closest("[data-round]").dataset.round;
     inp.oninput=()=>{S.drafts["g"+n]=inp.value};
     inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();doGuess(n)}}});
   document.querySelectorAll("[data-act]").forEach(b=>{if(b.dataset.act==="ovclose")return;b.onclick=()=>{
     const n=b.dataset.n||b.closest("[data-round]")?.dataset.round, a=b.dataset.act, r=n&&roundOf(n);
     if(a==="join") join();
-    if(a==="recat"){S.choice=null;store.set(null);LIVE.me=null;closeSheet();render()}
     if(a==="test"){if(!S.choice){S.choice=S.myTag||"LS"} if(!TEST.meta) resetTest(); S.G=TEST; closeSheet(); render(); scrollTo(0,0)}
     if(a==="exit"){S.G=LIVE; closeSheet(); render(); scrollTo(0,0)}
     if(a==="reset"){resetTest(); Object.keys(S.drafts).forEach(k=>delete S.drafts[k]); closeSheet(); render()}
