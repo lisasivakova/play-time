@@ -262,6 +262,46 @@ button,.key,.cell{touch-action:manipulation;-webkit-tap-highlight-color:transpar
 .pl .cap{display:flex;align-items:center;gap:3px}
 svg.mini{width:13px;height:10px;display:inline-block;vertical-align:-1px}
 .wrival,.vs{margin:0;text-align:center;font:600 13.5px var(--body);color:var(--ink-2)}
+
+/* wardrobe, prizes, wildcard, recap */
+.hcat svg.mascot{height:170px;width:auto;max-width:100%}
+.hbtns{display:flex;justify-content:center;margin-top:-6px}
+.wbtn{border:2.5px solid var(--ink);border-radius:99px;background:var(--card);color:var(--ink);padding:8px 18px;font:800 14px var(--body)}
+.prizebar{width:100%;border:2.5px solid var(--ink);border-radius:18px;background:var(--ink);color:#fff;padding:14px 16px;font:800 15px var(--body);text-align:left}
+.wildline{margin:0;text-align:center;font:500 13px var(--body);color:var(--ink-2)}.wildline b{color:var(--ink)}
+.game.wild{box-shadow:5px 5px 0 var(--ink)}
+.x2{flex:none;border-radius:99px;background:var(--ink);color:#fff;padding:5px 10px;font:800 12px var(--body);white-space:nowrap}
+.stage{border:2.5px solid var(--ink);border-radius:22px;display:flex;justify-content:center;align-items:center;padding:6px;background:var(--card)}
+.stage svg.mascot{height:190px;width:auto;max-width:100%}
+.slots{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.slot{display:flex;align-items:center;gap:6px;border:2px solid var(--ink);border-radius:99px;padding:5px 12px 5px 6px;font:700 13px var(--body);background:var(--card);color:var(--ink)}
+.slot svg{width:24px;height:24px}.slot.empty{border-style:dashed;color:var(--ink-3);padding:7px 14px}
+.wgrid3,.wgrid4{display:grid;gap:10px}.wgrid3{grid-template-columns:repeat(3,1fr)}.wgrid4{grid-template-columns:repeat(4,1fr);gap:8px}
+.it{border:2.5px solid var(--ink);border-radius:18px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative;background:var(--card);color:var(--ink);padding:4px}
+.it>svg{width:60%;height:60%}.it i{font:700 10.5px var(--body);font-style:normal}
+.it.lock{border:2px dashed var(--ink-3)}.it.lock>svg:not(.lk){opacity:.22}.it.lock i{color:var(--ink-3)}
+.it.own{opacity:.35}.it.sel,.it.on{border-width:3.5px;box-shadow:4px 4px 0 var(--ink)}
+.it .badge{position:absolute;top:5px;right:5px;width:19px;height:19px;border-radius:50%;background:var(--ink);color:#fff;font:800 11px/19px var(--body);text-align:center}
+.it svg.lk{position:absolute;top:7px;right:8px;width:12px;height:14px}
+.prog{border:2.5px solid var(--ink);border-radius:18px;padding:12px 14px}.prog .t{display:flex;justify-content:space-between;font:700 13px var(--body)}
+.prog .bar{height:10px;border:2px solid var(--ink);border-radius:99px;margin-top:8px;overflow:hidden}.prog .bar div{height:100%;background:var(--ink)}
+.prog p{margin:7px 0 0;font:500 12px var(--body);color:var(--ink-2)}
+.swaphd{display:flex;gap:12px;align-items:center}.swaphd h2{font-size:20px}.swaphd p{margin:2px 0 0;color:var(--ink-2);font-size:13px}
+.swapic{width:54px;height:54px;border:2.5px solid var(--ink);border-radius:16px;display:grid;place-items:center;flex:none}.swapic svg{width:36px;height:36px}
+.opt{display:flex;align-items:center;gap:12px;border:2.5px solid var(--ink);border-radius:18px;padding:10px 14px;font:700 15px var(--body);background:var(--card);color:var(--ink);width:100%}
+.opt svg{width:38px;height:38px}.opt .arr{margin-left:auto}
+.link.center{align-self:center}
+.recap{gap:14px}.rtop{display:flex;align-items:center;gap:6px;width:100%}.rcat svg{width:150px;height:auto;display:block}
+.rnum{font:800 96px/.9 var(--display);letter-spacing:-.05em}.rvs{font:800 15px var(--body)}
+.rh{font:800 30px/1.05 var(--display);letter-spacing:-.03em;margin:0;text-align:center}
+.rrows{width:100%;display:flex;flex-direction:column;gap:12px}.rt{display:flex;justify-content:space-between;font:700 14px var(--body)}.rt b{font-weight:700}.rt span:first-child{color:var(--ink-2);font-weight:500}.rt span:first-child b{color:var(--ink)}
+.rbar{height:12px;border:2px solid var(--ink);border-radius:99px;margin-top:5px;overflow:hidden}.rbar div{height:100%;background:var(--ink)}
+.rcrowns{margin:0;font:600 13.5px var(--body);color:var(--ink-2);display:flex;gap:5px;align-items:center;justify-content:center}
+.testbar{border:2px dashed var(--ink);border-radius:16px;padding:8px 10px;display:flex;flex-direction:column;gap:7px;font:500 13px var(--body)}
+.testbar .tb1{display:flex;align-items:center;gap:10px}.testbar .seg{display:inline-flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden}
+.testbar .seg button{border:0;background:var(--card);padding:4px 13px;font:800 13px var(--display);color:var(--ink)}.testbar .seg button.on{background:var(--ink);color:#fff}
+.testbar .tl{margin-left:auto;border:0;background:none;text-decoration:underline;font:600 13px var(--body);color:var(--ink-2)}
+.testbar .tb2{display:flex;flex-wrap:wrap;gap:6px}.testbar .tb2 button{border:1.5px solid var(--ink);border-radius:99px;background:var(--card);padding:4px 10px;font:700 12px var(--body);color:var(--ink)}
 </style>
 
 </head>
@@ -2726,18 +2766,20 @@ function wordleDuel(d){ /* +1 to whoever needed fewer tries, once both have play
   const ta=wTries(a), tb=wTries(b); if(ta===tb||Math.min(ta,tb)>6) return {winner:null};
   return {winner:ta<tb?"LS":"SH"};
 }
-function ledger(){
-  const L=[], add=(tag,pts,d)=>{if(pts&&d)L.push({tag,pts,wk:weekOf(d)})};
+function ledgerFull(){
+  const P=[], Q=[], add=(tag,pts,d,game)=>{if(pts&&d)P.push({tag,pts:pts*(game==="bonus"?1:xMult(game,d)),wk:weekOf(d),game})}, play=(tag,d,game)=>{if(d)Q.push({tag,wk:weekOf(d),game})};
   for(const v of Object.values(LIVE.solo||{})){
-    if(v.kind==="sudoku") add(v.player,SPTS(v.level),v.date);
-    if(v.kind==="wordle") add(v.player,v.points||0,v.date);
+    if(v.kind==="sudoku"){add(v.player,SPTS(v.level),v.date,"sudoku");play(v.player,v.date,"sudoku")}
+    if(v.kind==="wordle"){add(v.player,v.points||0,v.date,"wordle");play(v.player,v.date,"wordle")}
+    if(v.kind==="bonus") add(v.player,v.points||0,v.date,"bonus");
   }
   const days=new Set(Object.values(LIVE.solo||{}).filter(v=>v.kind==="wordle").map(v=>v.date));
-  for(const d of days){const w=wordleDuel(d); if(w&&w.winner) add(w.winner,1,d)}
-  for(const r of roundsList(LIVE)){if(r.status!=="solved"&&r.status!=="missed")continue;const s=scoreRound(r);for(const t in s)add(t,s[t],r.endedAt||r.startedAt)}
-  for(const r of drawList(LIVE)){if(r.status!=="solved")continue;const s=scoreDraw(r);for(const t in s)add(t,s[t],r.endedAt||r.startedAt)}
-  return L;
+  for(const d of days){const w=wordleDuel(d); if(w&&w.winner) add(w.winner,1,d,"wordle")}
+  for(const r of roundsList(LIVE)){if(r.status!=="solved"&&r.status!=="missed")continue;const d=r.endedAt||r.startedAt,s=scoreRound(r);for(const t in s)add(t,s[t],d,"pe");play(r.writer,d,"pe");play(r.guesser,d,"pe")}
+  for(const r of drawList(LIVE)){if(r.status!=="solved"&&r.status!=="missed")continue;const d=r.endedAt||r.startedAt,s=scoreDraw(r);for(const t in s)add(t,s[t],d,"draw");play(r.drawer,d,"draw");play(r.guesser,d,"draw")}
+  return {points:P,plays:Q};
 }
+function ledger(){return ledgerFull().points}
 function weekPoints(tag,wk){let t=0;for(const e of ledger())if(e.tag===tag&&e.wk===wk)t+=e.pts;return t}
 function crowns(){ /* finished weeks only; a tie gives no crown */
   const L=ledger(), now=weekOf(today()), weeks={};
@@ -2815,7 +2857,7 @@ function loginScreen(){
 
 /* ---------- home ---------- */
 function homeScreen(){
-  const ls=totalPoints("LS"), sh=totalPoints("SH"), lead=ls===sh?null:(ls>sh?"LS":"SH"), me=S.choice, d=today(), cr=crowns(), dl=daysLeft();
+  const ls=totalPoints("LS"), sh=totalPoints("SH"), lead=ls===sh?null:(ls>sh?"LS":"SH"), me=S.choice, d=today(), cr=crowns(), dl=daysLeft(), wild=wildOf(d), ps=prizeState(me);
   const player=(tag,pts)=>`<div class="pl ${tag==="SH"?"white":""} ${tag===me?"me":""}"><div class="plhead"><span class="dot ${tag==="SH"?"white":""}"></span><b>${tag}</b>${lead===tag?CROWN:""}</div>
     <span class="pts">${pts}</span><span class="cap">${tag===me?"you":"points"} · ${MINICROWN}${cr[tag]}</span></div>`;
   const w=soloDone("wordle",d,me);
@@ -2831,13 +2873,16 @@ function homeScreen(){
   if(dc){ if(dc.drawer===me&&!dc.strokes) dStatus="Your turn: draw"; else if(dc.drawer===me) dStatus=`Waiting for ${dc.guesser}`;
     else if(!dc.strokes) dStatus=`${dc.drawer} is drawing`; else dStatus="Your turn: guess"; }
   const ID=`<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27c4-9 8-13 11-11s-3 10 1 11 7-13 11-12 0 9 3 10 4-3 4-3"/></svg>`;
-  const tile=(go,title,lang,status,icon)=>`<button class="game" data-go="${go}"><span class="gicon">${icon}</span><span class="gtext"><b>${title}</b><span>${esc(status)}</span></span><span class="glang">${lang}</span></button>`;
+  const tile=(go,title,lang,status,icon)=>`<button class="game ${go===wild?"wild":""}" data-go="${go}"><span class="gicon">${icon}</span><span class="gtext"><b>${title}</b><span>${esc(status)}</span></span>${go===wild?'<span class="x2">×2 today</span>':lang?`<span class="glang">${lang}</span>`:""}</button>`;
   const IW=`<svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="12" width="9" height="9" rx="2"/><rect x="15.5" y="12" width="9" height="9" rx="2" fill="currentColor"/><rect x="28" y="12" width="9" height="9" rx="2"/></g></svg>`;
   const IS=`<svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="5" width="30" height="30" rx="4"/><path d="M15 5v30M25 5v30M5 15h30M5 25h30" stroke-width="1.6"/></g><text x="10" y="13.5" font-size="7" font-weight="700" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">5</text><text x="27" y="33.5" font-size="7" font-weight="700" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">9</text></svg>`;
   const IP=`<svg viewBox="0 0 40 40"><text x="20" y="29" text-anchor="middle" font-size="26" font-weight="800" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">П</text></svg>`;
   return topBar("Play Time","choose a game")+errBox()+
     `<p class="season">This week · ${dl===0?"last day — crown at midnight":dl===1?"1 day left":dl+" days left"}</p><div class="board">${player("LS",ls)}${player("SH",sh)}</div>
-     <div class="hcat">${mascot("idle",me)}</div>
+     <div class="hcat">${dressedCat(me,ps.wearing)}</div>
+     <div class="hbtns"><button class="wbtn" data-go="wardrobe">Wardrobe · ${ps.owned.length} / ${ITEMS.length}</button></div>
+     ${ps.picks?`<button class="prizebar" data-go="unlock">🎁 You earned a prize — pick it →</button>`:""}
+     <p class="wildline">Today's wildcard: <b>${GAME_NAMES[wild]}</b> points count double</p>
      <section class="group"><h2>Play solo</h2><p class="gsub">New every day · the same puzzle for both of you</p>
        ${tile("wordle","Wordle","EN",wStatus,IW)}${tile("sudoku","Sudoku","",sStatus,IS)}</section>
           <section class="group"><h2>Battle mode</h2><p class="gsub">Take turns · one gives clues or draws, the other guesses</p>
@@ -3034,6 +3079,218 @@ function drawAct(a,n){
   if(a==="dguess") doDrawGuess(n);
 }
 
+/* ---------- wardrobe items (original doodles) ---------- */
+const BEBA_SVG=(()=>{const K="#111";
+
+const C={g:"#a6a6a6",d:"#7a7a7a",e:"#6a6a6a",w:"#fff"};
+const st=(w=1.8)=>`stroke="${K}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+function head({fill=C.g,ear=C.e,sleep=false,open=false,sw=1.8}={}){
+  const F="M-14 6C-10 0 -6 -7 0 -7.5C5 -8 7 -5 9 -3.5C14 -2 21 -1 26 .5C29.5 1.5 29 5.5 25.5 6C21 6.5 15 7 10 7.5C6 8 3 10 1 14L-8 16Z";
+  const O="M-12.5 3.5C-9 -1 -6 -7 0 -7.5C5 -8 7 -5 9 -3.5C14 -2 21 -1 26 .5C29.5 1.5 29 5.5 25.5 6C21 6.5 15 7 10 7.5C6 8 3 10 1.2 13";
+  return `<path d="${F}" fill="${fill}"/>`+
+  (open?`<path d="M15 7.4C15.5 12.5 18 15 20.5 14.6C23 14.2 23.6 11 23 7" fill="#d6d6d6" ${st(sw*.8)}/>`:"")+
+  `<path d="${O}" fill="none" ${st(sw)}/>`+
+  (open?`<path d="M24.5 6C21 6.6 17 7.2 13 7.6" fill="none" stroke="${K}" stroke-width="${sw*.8}" stroke-linecap="round"/>`:`<path d="M24 5.8C21 5.4 18 5.6 15 6" fill="none" stroke="${K}" stroke-width="${sw*.6}" stroke-linecap="round"/>`)+
+  (sleep?`<path d="M5.5 -1.2C7 .4 9 .4 10.5 -1.2" fill="none" stroke="${K}" stroke-width="${sw*.75}" stroke-linecap="round"/>`:`<circle cx="8" cy="-1.3" r="1.35" fill="${K}"/>`)+
+  `<ellipse cx="27.4" cy="2.7" rx="2.1" ry="1.8" fill="${K}"/>`+
+  `<path d="M-.5 -5.5C-6 -4 -7.5 1 -7 6.5C-6.5 12 -4.5 15 -1.5 14.5C1.5 14 2.5 10 2.5 5C2.5 0 2 -4 -.5 -5.5Z" fill="${ear}" ${st(sw)}/>`;
+}
+function leg(x,y,len,ang=0,fill=C.g,sw=1.8){return `<g transform="translate(${x} ${y}) rotate(${ang})"><path d="M-3.3 0V${len-2.5}Q-3.3 ${len} -.5 ${len}H4.6Q6.4 ${len} 6.2 ${len-1.5}Q5.8 ${len-3.2} 3.3 ${len-3.6}V0Z" fill="${fill}" ${st(sw)}/></g>`}
+const TORSO="M5 -41C10 -38 16 -33 23 -31C30 -33 50 -33 72 -33C78 -33 82 -36 86 -42L92 -46L100 -32C101 -27 100 -22 97 -17C95 -13 92 -11 86 -11C70 -11 54 -12 40 -13C32 -13 26 -15 22 -20C20 -24 21 -27 21 -27C14 -30 9 -36 5 -41Z";
+function standing({fill=C.g,far=C.d,ear=C.e,sw=1.8,headOpt={},legs="stand",tail=null,headAt=[98,-46],headRot=0,torso=TORSO}={}){
+  const L=legs==="walk"?[[86,-16,16,14],[91,-16,16,-12],[27,-16,16,-14],[32,-16,16,12]]:[[85.5,-16,16.6,0],[91,-16,16.6,0],[27,-16,16.6,0],[32.5,-16,16.6,0]];
+  let t=tail?`<path d="${tail}" fill="${fill}" ${st(sw)}/>`:"";
+  return t+leg(...L[0],far,sw)+leg(...L[2],far,sw)+leg(...L[1],fill,sw)+leg(...L[3],fill,sw)+`<path d="${torso}" fill="${fill}" ${st(sw)}/>`+`<g transform="translate(${headAt[0]} ${headAt[1]}) rotate(${headRot})">${head({fill,ear,sw,...headOpt})}</g>`;
+}
+
+return standing({legs:"walk"});})();
+const WARD={K:"#111"};
+const K="#111";
+const Wh="#fff";
+/* worn items: absolute coords on the cat */
+const WORN={
+ sunglasses:(b)=>`<rect x="76" y="64" width="21" height="15" rx="5" fill="${WARD.K}" stroke="${b?Wh:K}" stroke-width="2.4"/><rect x="103" y="64" width="21" height="15" rx="5" fill="${WARD.K}" stroke="${b?Wh:K}" stroke-width="2.4"/><path d="M97 69q3-3 6 0" fill="none" stroke="${b?Wh:K}" stroke-width="2.4"/><path d="M76 68l-7-3M124 68l7-3" stroke="${b?Wh:K}" stroke-width="2.4" stroke-linecap="round"/><path d="M80 68h5M107 68h5" stroke="${Wh}" stroke-width="2" stroke-linecap="round"/>`,
+ iqos:(b)=>`<g transform="translate(102 86) rotate(12)"><rect x="0" y="-1.7" width="9" height="3.4" rx=".8" fill="${Wh}" stroke="${WARD.K}" stroke-width="1.4"/><path d="M9 -3.4h46q3 0 3 3.4t-3 3.4h-46z" fill="${Wh}" stroke="${WARD.K}" stroke-width="1.9" stroke-linejoin="round"/><rect x="22" y="-1.5" width="8" height="3" rx="1.5" fill="${WARD.K}"/><path d="M50 -3.4v6.8" stroke="${WARD.K}" stroke-width="1.2"/></g><path d="M158 90C166 86 170 76 164 70C158 64 150 70 155 76C160 81 170 72 170 58" fill="none" stroke="${WARD.K}" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="0 6.2"/>`,
+ pendant:(b)=>`<path d="M82 100Q100 116 118 100" fill="none" stroke="${b?Wh:K}" stroke-width="1.8" stroke-dasharray="2 2"/><path d="M100 109v6" stroke="${b?Wh:K}" stroke-width="1.8"/><path d="M100 128c-7-5-11-9-8-13c2.4-3 6-2 8 1c2-3 5.6-4 8-1c3 4-1 8-8 13z" fill="${Wh}" stroke="${WARD.K}" stroke-width="2.2" stroke-linejoin="round"/>`,
+ bacon:(b)=>{const G="#e3e3e3";return `<g transform="translate(101 49) scale(1.05)">
+   <path d="M-12 -2l-4 5l-3.5 .5M-16 3l-1 3M-16 3l1.5 3" fill="none" stroke="${WARD.K}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+   <path d="M9 -2l4 5l3.5 .5M13 3l1 3M13 3l-1.5 3" fill="none" stroke="${WARD.K}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+   <path d="M-27 -3.5Q-26 -9 -20.5 -10Q-15 -11 -12 -8.5Q-2 -11.5 8 -9.5Q14 -8.5 17 -6.5Q27 -6.5 31 0Q35 7 31 14Q29 17 27 14.5Q29.5 7 25 2.5Q20.5 -1 15 -1.2Q2 0 -10 -1.2Q-15 -.3 -19.5 -1Q-25 -1 -27 -3.5Z" fill="${G}" stroke="${WARD.K}" stroke-width="1.9" stroke-linejoin="round"/>
+   <path d="M-7 -10q1.2 4.5 0 8.6M1 -10.6q1.2 4.8 0 9.4M9 -9.2q1.2 4 0 7.8M20 -5.6q2 2.5 1.2 5M27 -2q2.5 1.5 3.4 4.4M29.5 7q2.4.5 3.4 2" fill="none" stroke="${WARD.K}" stroke-width="2.4" stroke-linecap="round"/>
+   <g fill="${WARD.K}"><circle cx="-3" cy="-6" r=".9"/><circle cx="5" cy="-4.5" r=".9"/><circle cx="13" cy="-4.8" r=".8"/><circle cx="-12" cy="-5" r=".8"/></g>
+   <path d="M-10 -2l-3 5l-3.5 .4M-13 3l-.6 3M-13 3l2 2.4" fill="none" stroke="${WARD.K}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+   <path d="M11 -2l3 5l3.5 .4M14 3l.6 3M14 3l-2 2.4" fill="none" stroke="${WARD.K}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+   <circle cx="-20" cy="-6" r="2.5" fill="${Wh}" stroke="${WARD.K}" stroke-width="1.2"/><path d="M-20 -8v4" stroke="${WARD.K}" stroke-width="1.2" stroke-linecap="round"/>
+   <path d="M-26.5 -3.3q4 1.6 9 -.4" fill="none" stroke="${WARD.K}" stroke-width="1.1" stroke-linecap="round"/></g>`},
+};
+/* ground items: local coords, x from 0 to w, ground at y=0 (feet line y=176) */
+const GROUND={
+ perfume:{w:30,side:"L",f:()=>`<rect x="9" y="-48" width="12" height="10" rx="2" fill="${WARD.K}"/><rect x="12" y="-38" width="6" height="5" fill="${Wh}" stroke="${WARD.K}" stroke-width="2"/><rect x="0" y="-33" width="30" height="33" rx="5" fill="${Wh}" stroke="${WARD.K}" stroke-width="2.6"/><rect x="6" y="-23" width="18" height="10" fill="none" stroke="${WARD.K}" stroke-width="1.6"/><path d="M9 -18h12" stroke="${WARD.K}" stroke-width="1.4"/>`},
+ drink:{w:28,side:"L",f:(b)=>`<path d="M1 -43h26l-3 43h-20z" fill="${Wh}" stroke="${WARD.K}" stroke-width="2.6" stroke-linejoin="round"/><rect x="-1.5" y="-49" width="31" height="7" rx="2" fill="${WARD.K}"/><rect x="6" y="-53" width="16" height="5" rx="2" fill="${WARD.K}"/><path d="M3.2 -30h21.6l-1.1 15h-19.4z" fill="${b?K:Wh}" stroke="${WARD.K}" stroke-width="2"/>${b?`<ellipse cx="14" cy="-22.5" rx="3" ry="4.4" fill="${Wh}"/><path d="M14 -26.5q-1.6 4 0 8" fill="none" stroke="${WARD.K}" stroke-width="1.2"/>`:`<path d="M9 -19q0-8 10-9q0 9-10 9z" fill="${WARD.K}"/><path d="M9 -19l6-5" stroke="${Wh}" stroke-width="1"/>`}<path d="M9 -57q-3-5 1-9M18 -57q-3-5 1-9" fill="none" stroke="${WARD.K}" stroke-width="1.8" stroke-linecap="round"/>`},
+ ball:{w:25,side:"L",f:()=>`<g transform="translate(12.5 -12.5)"><circle r="12.5" fill="${WARD.K}"/><circle cx="-2.5" cy="-3.5" r="6" fill="${Wh}"/><text x="-2.5" y="-0.6" text-anchor="middle" font-family="Helvetica Neue,Arial" font-weight="800" font-size="8.5" fill="${WARD.K}">8</text><path d="M5 -8q3.5 2 4 5" fill="none" stroke="${Wh}" stroke-width="1.5" stroke-linecap="round"/></g>`},
+ burger:{w:34,side:"L",f:()=>`<g transform="translate(0 -31)"><path d="M2 14q0-14 15-14t15 14z" fill="${Wh}" stroke="${WARD.K}" stroke-width="2.4" stroke-linejoin="round"/><g fill="${WARD.K}"><ellipse cx="11" cy="7" rx="1.3" ry=".8"/><ellipse cx="17" cy="4" rx="1.3" ry=".8"/><ellipse cx="23" cy="7.5" rx="1.3" ry=".8"/><ellipse cx="15" cy="10" rx="1.3" ry=".8"/></g><path d="M0 16q3-3 5 0t5 0t5 0t5 0t5 0t5 0t4 0" fill="${Wh}" stroke="${WARD.K}" stroke-width="2" stroke-linejoin="round"/><path d="M3 17.5h28l2 3h-32z" fill="${WARD.K}"/><rect x="1" y="20" width="32" height="6" rx="2.5" fill="${WARD.K}"/><path d="M2 27h30q0 4-4 4h-22q-4 0-4-4z" fill="${Wh}" stroke="${WARD.K}" stroke-width="2.4" stroke-linejoin="round"/></g>`},
+ iphone:{w:26,side:"R",f:()=>`<g transform="translate(4 -47) rotate(6)"><rect x="0" y="0" width="22" height="44" rx="5.5" fill="${WARD.K}"/><rect x="2.3" y="2.3" width="17.4" height="39.4" rx="4" fill="${Wh}"/><rect x="7" y="4.6" width="8" height="3" rx="1.5" fill="${WARD.K}"/><path d="M11 29c-4-3-6-5-4-7.5c1.5-1.6 3.4-.8 4 .6c.6-1.4 2.5-2.2 4-.6c2 2.5 0 4.5-4 7.5z" fill="${WARD.K}"/></g>`},
+ sword:{w:26,side:"R",f:()=>`<g transform="translate(13 -80)"><rect x="-3" y="0" width="6" height="16" rx="2" fill="${WARD.K}"/><circle cx="0" cy="-2" r="3.5" fill="${WARD.K}"/><rect x="-13" y="16" width="26" height="5" rx="2" fill="${WARD.K}"/><path d="M-4 21h8v53l-4 6l-4-6z" fill="${Wh}" stroke="${WARD.K}" stroke-width="2.4" stroke-linejoin="round"/><path d="M0 24v47" stroke="${WARD.K}" stroke-width="1.2"/></g>`},
+ kinder:{w:40,side:"R",f:()=>`<g transform="translate(0 -38)"><rect x="4" y="-8" width="9" height="16" rx="1.5" fill="${Wh}" stroke="${WARD.K}" stroke-width="2"/><rect x="15" y="-12" width="9" height="20" rx="1.5" fill="${Wh}" stroke="${WARD.K}" stroke-width="2"/><rect x="26" y="-6" width="9" height="14" rx="1.5" fill="${Wh}" stroke="${WARD.K}" stroke-width="2"/><rect x="0" y="4" width="40" height="34" rx="3" fill="${WARD.K}"/><rect x="3" y="12" width="34" height="13" rx="6" fill="${Wh}"/><text x="20" y="21.6" text-anchor="middle" font-family="Helvetica Neue,Arial" font-weight="800" font-size="8" fill="${WARD.K}">KINDER</text><text x="20" y="33" text-anchor="middle" font-family="Helvetica Neue,Arial" font-weight="700" font-size="6" fill="${Wh}">× 8 bars</text></g>`},
+ beba:{w:80,side:"R",f:(b,side)=>side==="R"?`<g transform="translate(80 0) scale(-.6 .6)">${BEBA_SVG}</g>`:`<g transform="scale(.6)">${BEBA_SVG}</g>`},
+};
+
+/* ---------- wardrobe: 12 items, 2 worn at a time ---------- */
+const ITEMS=["sunglasses","iqos","iphone","pendant","perfume","sword","ball","drink","kinder","burger","beba","bacon"];
+const ITEM_NAME={sunglasses:"Sunglasses",iqos:"IQOS",iphone:"iPhone",pendant:"Pendant",perfume:"Perfume",sword:"Sword",ball:"8-ball",drink:"Coffee",kinder:"Kinder",burger:"Burger",beba:"Beba",bacon:"Bacon"};
+const itemName=(k,who)=>k==="drink"?(who==="SH"?"Matcha":"Coffee"):ITEM_NAME[k];
+const itemLow=(k,who)=>["iqos","iphone","beba","bacon","kinder"].includes(k)?itemName(k,who):itemName(k,who).toLowerCase();
+const W_GAP=7, W_LEFT=72-W_GAP, W_RIGHT=158+W_GAP; /* cat body starts at x 72, the tail reaches x ~157 */
+function dressParts(who,keys){
+  const b=who==="LS"; let out="", used={L:false,R:false}, minX=0, maxX=200;
+  for(const k of keys){
+    if(WORN[k]){out+=WORN[k](b);continue}
+    const g=GROUND[k]; if(!g) continue; let side=g.side; if(used[side]) side=side==="L"?"R":"L"; used[side]=true;
+    const x=side==="L"?W_LEFT-g.w:W_RIGHT;
+    out+=`<g transform="translate(${x} 176)">${g.f(b,side)}</g>`;
+    minX=Math.min(minX,x-4); maxX=Math.max(maxX,x+g.w+4);
+  }
+  return {out,minX,maxX};
+}
+/* the cat with its items; the frame widens only as much as the items need */
+function dressedCat(who,keys,mode="idle"){
+  const {out,minX,maxX}=dressParts(who,keys||[]), half=Math.max(100,100-minX,maxX-100);
+  return mascot(mode,who).replace('viewBox="0 0 200 200"',`viewBox="${100-half} 18 ${2*half} 166" data-wide="${half>100?1:0}"`).replace('</svg>',out+'</svg>');
+}
+const ITEM_BOX={sunglasses:[64,56,72,30],iqos:[98,44,76,56],pendant:[78,96,44,36],bacon:[66,28,62,34]};
+const GROUND_H={perfume:48,drink:66,ball:25,burger:31,iphone:48,sword:84,kinder:50,beba:40};
+function itemThumb(k,who){
+  const b=who==="LS";
+  if(WORN[k]){const [x,y,w,h]=ITEM_BOX[k],m=Math.max(w,h)+6,cx=x+w/2,cy=y+h/2;return `<svg viewBox="${cx-m/2} ${cy-m/2} ${m} ${m}" aria-hidden="true">${WORN[k](false)}</svg>`}
+  const g=GROUND[k],H=GROUND_H[k],m=Math.max(g.w,H)+8;
+  return `<svg viewBox="${g.w/2-m/2} ${-H/2-m/2} ${m} ${m}" aria-hidden="true">${g.f(b,"L")}</svg>`;
+}
+const wardOf=tag=>(LIVE.ward||{})[tag]||{kind:"wardrobe",player:tag,owned:[],wearing:[]};
+function allTimePoints(tag){let t=0;for(const e of ledger())if(e.tag===tag)t+=e.pts;return t}
+function prizeState(tag){
+  const w=wardOf(tag), pts=allTimePoints(tag), earned=crowns()[tag]+Math.floor(pts/100);
+  const picks=Math.max(0,Math.min(ITEMS.length-w.owned.length,earned-w.owned.length));
+  return {picks,pts,nextAt:(Math.floor(pts/100)+1)*100,owned:w.owned,wearing:w.wearing};
+}
+async function saveWard(tag,data){
+  const v={kind:"wardrobe",player:tag,owned:data.owned,wearing:data.wearing};
+  (LIVE.ward||(LIVE.ward={}))[tag]=v; render();
+  try{await FB.save("wr-"+tag,v)}catch(e){S.err="Couldn't save your wardrobe. Check the connection.";render()}
+}
+const WSel={pick:null,swap:null};
+function unlockScreen(){
+  const me=S.choice, ps=prizeState(me), sel=WSel.pick;
+  if(!ps.picks) return wardrobeScreen();
+  const tiles=ITEMS.map(k=>{const own=ps.owned.includes(k);return `<button class="it ${own?"own":""} ${sel===k?"sel":""}" ${own?"disabled":""} data-pick-item="${k}">${itemThumb(k,me)}<i>${esc(itemName(k,me))}${own?" · owned":""}</i>${sel===k?'<span class="badge">✓</span>':""}</button>`}).join("");
+  return topBar("New prize",ps.picks>1?`${ps.picks} to pick`:"pick one")+`<div class="hero">${dressedCat(me,[], "win")}<span class="kick">You earned a prize</span><h1>Pick something for your wardrobe</h1><span class="sub">Choose one. You can wear it right away.</span></div>
+    <div class="wgrid3">${tiles}</div>${cta("takeitem",sel?`Take the ${itemLow(sel,me)}`:"Pick an item",!sel)}`;
+}
+function wardrobeScreen(){
+  const me=S.choice, ps=prizeState(me), wearing=ps.wearing;
+  const slots=[0,1].map(i=>wearing[i]?`<button class="slot" data-takeoff="${wearing[i]}">${itemThumb(wearing[i],me)}${esc(itemName(wearing[i],me))} ✕</button>`:`<span class="slot empty">empty slot</span>`).join("");
+  const tiles=ITEMS.map(k=>{const on=wearing.includes(k),own=ps.owned.includes(k);
+    return `<button class="it ${on?"on":own?"":"lock"}" data-wear="${k}" ${own?"":"disabled"} aria-label="${esc(itemName(k,me))}${on?", wearing":own?"":", locked"}">${itemThumb(k,me)}<i>${esc(itemName(k,me))}</i>${on?'<span class="badge">✓</span>':own?"":LOCK_SVG}</button>`}).join("");
+  const pct=Math.round((ps.pts%100));
+  return topBar("Wardrobe","2 items at a time")+errBox()+`<div class="stage">${dressedCat(me,wearing)}</div><div class="slots">${slots}</div>
+    ${ps.picks?`<button class="prizebar" data-go="unlock">You have ${ps.picks>1?ps.picks+" prizes":"a prize"} to pick →</button>`:""}
+    <div class="wgrid4">${tiles}</div>
+    <div class="prog"><div class="t"><span>Next prize at ${ps.nextAt} points</span><span>${ps.pts} / ${ps.nextAt}</span></div><div class="bar"><div style="width:${pct}%"></div></div><p>…or win a week to pick one sooner. Points from every week count here.</p></div>`;
+}
+const LOCK_SVG=`<svg class="lk" viewBox="0 0 13 15" aria-hidden="true"><rect x="1" y="6" width="11" height="8" rx="2" fill="#999"/><path d="M3.5 6V4.5a3 3 0 0 1 6 0V6" fill="none" stroke="#999" stroke-width="2"/></svg>`;
+function wearTap(k){
+  const me=S.choice, ps=prizeState(me); if(!ps.owned.includes(k)) return;
+  let w=[...ps.wearing];
+  if(w.includes(k)) w=w.filter(x=>x!==k);
+  else if(w.length<2) w.push(k);
+  else {openSwap(k);return}
+  saveWard(me,{owned:ps.owned,wearing:w});
+}
+function openSwap(k){
+  const me=S.choice, ps=prizeState(me), el=$("#sheet");
+  el.innerHTML=`<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true"><div class="swaphd"><span class="swapic">${itemThumb(k,me)}</span><div><h2>Put on the ${esc(itemLow(k,me))}</h2><p>Your cat has two things on. Swap one:</p></div></div>
+    ${ps.wearing.map(x=>`<button class="opt" data-swapout="${x}" data-swapin="${k}">${itemThumb(x,me)}<span>Take off ${esc(itemLow(x,me))}</span><span class="arr">→</span></button>`).join("")}
+    <button class="link center" data-close>Cancel</button></div></div>`;
+  el.hidden=false; bind();
+  el.querySelector("[data-scrim]").onclick=e=>{if(e.target.hasAttribute("data-scrim"))closeSheet()};
+  el.querySelectorAll("[data-swapout]").forEach(b=>b.onclick=()=>{const out=b.dataset.swapout,inn=b.dataset.swapin;saveWard(me,{owned:ps.owned,wearing:ps.wearing.map(x=>x===out?inn:x)});closeSheet()});
+}
+function takeItem(){
+  const me=S.choice, ps=prizeState(me), k=WSel.pick; if(!k||!ps.picks||ps.owned.includes(k)) return;
+  const owned=[...ps.owned,k], wearing=ps.wearing.length<2?[...ps.wearing,k]:ps.wearing;
+  WSel.pick=null; saveWard(me,{owned,wearing});
+  S.screen=ps.picks>1?"unlock":"wardrobe"; render(); scrollTo(0,0);
+}
+
+/* ---------- daily wildcard: one game a day is worth double, the same for both ---------- */
+const GAME_NAMES={wordle:"Wordle",sudoku:"Sudoku",pe:"Игра на П",draw:"Sketch"};
+const wildOf=d=>["wordle","sudoku","pe","draw"][(hash("wild|"+d)+(S.wildShift||0))%4];
+const xMult=(game,d=today())=>wildOf(d)===game?2:1;
+
+/* ---------- weekly recap for the winner ---------- */
+function weekRecap(wk){
+  const L=ledgerFull(), out={LS:{total:0,games:{}},SH:{total:0,games:{}}};
+  for(const t of ["LS","SH"]) for(const g of Object.keys(GAME_NAMES)) out[t].games[g]={played:0,pts:0};
+  for(const e of L.points) if(e.wk===wk){out[e.tag].total+=e.pts;if(out[e.tag].games[e.game])out[e.tag].games[e.game].pts+=e.pts}
+  for(const p of L.plays) if(p.wk===wk) out[p.tag].games[p.game].played++;
+  return out;
+}
+function recapDue(){
+  const me=S.choice, wk=weekOf(today())-7, r=weekRecap(wk);
+  if(r[me].total<=r[me==="LS"?"SH":"LS"].total) return null;
+  let seen=null; try{seen=localStorage.getItem(`pt.recap.${wk}.${me}`)}catch(e){}
+  return seen&&!S.forceRecap?null:{wk,r};
+}
+function showRecap(rc){
+  const me=S.choice, other=me==="LS"?"SH":"LS", mine=rc.r[me], theirs=rc.r[other], cr=crowns();
+  try{localStorage.setItem(`pt.recap.${rc.wk}.${me}`,"1")}catch(e){}
+  S.forceRecap=false;
+  const max=Math.max(1,...Object.values(mine.games).map(g=>g.pts));
+  const unit={wordle:"played",sudoku:"solved",pe:"rounds",draw:"rounds"};
+  const rows=Object.keys(GAME_NAMES).map(g=>{const x=mine.games[g];return `<div class="rrow"><div class="rt"><span><b>${GAME_NAMES[g]}</b> · ${x.played} ${unit[g]}</span><span>+${x.pts}</span></div><div class="rbar"><div style="width:${x.pts/max*100}%"></div></div></div>`}).join("");
+  const ps=prizeState(me);
+  const el=$("#ov");
+  el.innerHTML=`<div class="in recap"><div class="rtop"><div class="rcat">${crownedCat(me)}</div><div><span class="kick">Last week you scored</span><div class="rnum">${mine.total}</div><span class="rvs">${other} scored ${theirs.total}</span></div></div>
+    <h1 class="rh">You're the smartest kitten of the week</h1><div class="rrows">${rows}</div>
+    <p class="rcrowns">${MINICROWN} ${me} ${cr[me]} ${cr[me]===1?"week":"weeks"} won · ${other} ${cr[other]}</p>
+    ${cta("ovclose",ps.picks?"Pick your prize":"Yay")}</div>`;
+  el.hidden=false; document.body.style.overflow="hidden";
+  el.querySelector('[data-act="ovclose"]').onclick=()=>{el.hidden=true;el.innerHTML="";document.body.style.overflow="";if(prizeState(me).picks){S.screen="unlock";render()}scrollTo(0,0)};
+}
+function crownedCat(who){
+  const crown=`<g transform="translate(100 30) rotate(-12)"><path d="M-20 4L-24 -18L-11 -6L0 -24L11 -6L24 -18L20 4Z" fill="#fff" stroke="#111" stroke-width="3" stroke-linejoin="round"/><rect x="-21" y="2" width="42" height="9" rx="2.5" fill="#fff" stroke="#111" stroke-width="3"/><circle cx="0" cy="-27" r="3.4" fill="#111"/><circle cx="-25" cy="-21" r="2.8" fill="#111"/><circle cx="25" cy="-21" r="2.8" fill="#111"/><circle cx="0" cy="6.5" r="2" fill="#111"/></g>`;
+  return mascot("win",who).replace('viewBox="0 0 200 200"','viewBox="0 -6 200 206"').replace('</svg>',crown+'</svg>');
+}
+function maybeRecap(){
+  if(!S.loaded||S.screen!=="home"||!$("#ov").hidden) return;
+  const rc=recapDue(); if(rc) showRecap(rc);
+}
+
+/* ---------- test mode (only in the preview) ---------- */
+
+function testBar(){
+  if(!window.PT_TEST) return "";
+  return `<div class="testbar"><div class="tb1"><b>Test</b><span class="seg">${["LS","SH"].map(t=>`<button data-tas="${t}" class="${S.choice===t?"on":""}">${t}</button>`).join("")}</span><button class="tl" data-treset>Reset</button></div>
+  <div class="tb2"><button data-tact="week">Win last week</button><button data-tact="recap">Winner screen</button><button data-tact="p100">+100 points</button><button data-tact="wild">Next wildcard</button><button data-tact="ward">Wardrobe</button></div></div>`;
+}
+function testAct(a){
+  const me=S.choice, d=today(), lw=weekOf(d)-7, day=k=>new Date((lw+k)*864e5).toISOString().slice(0,10);
+  const put=(id,v)=>{LIVE.solo[id]=v;FB.save(id,v)};
+  if(a==="week"){ /* a plausible last week where the current cat wins */
+    const o=me==="LS"?"SH":"LS";
+    [0,1,2,3,4].forEach(k=>{put(`w-${day(k)}-${me}`,{kind:"wordle",player:me,date:day(k),word:"crane",guesses:Array(3).fill("x"),status:"won",points:4});
+      if(k<3) put(`w-${day(k)}-${o}`,{kind:"wordle",player:o,date:day(k),word:"crane",guesses:Array(4).fill("x"),status:"won",points:3})});
+    ["easy","medium","hard"].forEach((l,k)=>put(`s-${day(k)}-${l}-${me}`,{kind:"sudoku",player:me,date:day(k),level:l,status:"won",points:0}));
+    put(`s-${day(1)}-easy-${o}`,{kind:"sudoku",player:o,date:day(1),level:"easy",status:"won",points:0});
+    try{localStorage.removeItem(`pt.recap.${lw}.${me}`)}catch(e){}
+  }
+  if(a==="recap"){S.forceRecap=true;S.screen="home"}
+  if(a==="p100"){const id=`b-${Date.now()}-${me}`;put(id,{kind:"bonus",player:me,date:d,points:100})}
+  if(a==="wild"){S.wildShift=(S.wildShift||0)+1}
+  if(a==="ward"){S.screen="wardrobe"}
+  render(); scrollTo(0,0);
+}
+function testSwitch(tag){S.choice=tag;S.myTag=tag;LIVE.me=tag;D.n=null;S.drafts={};WSel.pick=null;render();scrollTo(0,0)}
+
 /* ---------- Wordle ---------- */
 const W_START=dayNum("2026-10-31");
 const W_ORDER=(()=>{const a=[...W_ANS];let h=hash("playtime-wordle");for(let i=a.length-1;i>0;i--){h=Math.imul(h^(h>>>15),2246822507)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a})();
@@ -3167,8 +3424,9 @@ function renderInner(){
   const app=$("#app");
   if(!S.choice){app.innerHTML=loginScreen();bind();return}
   if(!S.loaded){app.innerHTML=topBar("Play Time","loading")+`<div class="hero">${mascot("wait",S.choice)}<h1>Opening…</h1></div>`;return}
-  app.innerHTML=(S.screen==="draw"?drawScreen():S.screen==="pe"?peScreen():S.screen==="wordle"?wordleScreen():S.screen==="sudoku"?sudokuScreen():homeScreen());
+  app.innerHTML=testBar()+(S.screen==="unlock"?unlockScreen():S.screen==="wardrobe"?wardrobeScreen():S.screen==="draw"?drawScreen():S.screen==="pe"?peScreen():S.screen==="wordle"?wordleScreen():S.screen==="sudoku"?sudokuScreen():homeScreen());
   bind(); if(S.screen==="pe") validateAll(); if(S.screen==="draw") bindPad();
+  setTimeout(maybeRecap,0);
 }
 
 /* ---------- sheets (Игра на П) ---------- */
@@ -3237,14 +3495,14 @@ function showOverlay(o){
   if(o.kind==="sent") h=`${mascot("win",S.choice)}<span class="kick">Clues sent</span><div class="big">${letters("Done!")}</div>
       <div class="box sentclues">${o.clues.map((c,i)=>`<div class="clue"><span class="n">0${i+1}</span><span class="t">${esc(c)}</span></div>`).join("")}</div>`+card("Fact",nextFact());
   else if(o.kind==="won") h=`${mascot("win",S.choice)}<span class="kick">On try ${o.at+1}${o.sniper?" · one word":""}</span><div class="big">${letters(o.word)}</div>
-      <div class="pts"><span class="chip lemon">you +${o.mine}</span>${o.theirs?`<span class="chip tomato">${esc(o.otherName)} +${o.theirs}</span>`:""}</div>`;
+      <div class="pts"><span class="chip lemon">you +${o.mine*xMult("pe")}</span>${o.theirs?`<span class="chip tomato">${esc(o.otherName)} +${o.theirs*xMult("pe")}</span>`:""}${xMult("pe")>1?'<span class="chip">×2 wildcard</span>':""}</div>`;
   else if(o.kind==="lost") h=`${mascot("lose",S.choice)}<span class="kick">Not guessed</span><div class="big">${letters(o.word)}</div><div class="pts"><span class="chip">+0 · your turn next</span></div>`;
-  else if(o.kind==="wwin") h=`${mascot("win",S.choice)}<span class="kick">Solved in ${o.tries}</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip lemon">+${o.pts}</span></div><p class="vs">${esc(o.vs||"")}</p>`+card("For you",litOfDay());
+  else if(o.kind==="wwin") h=`${mascot("win",S.choice)}<span class="kick">Solved in ${o.tries}</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip lemon">+${o.pts*xMult("wordle")}</span>${xMult("wordle")>1?'<span class="chip">×2 wildcard</span>':""}</div><p class="vs">${esc(o.vs||"")}</p>`+card("For you",litOfDay());
   else if(o.kind==="wlose") h=`${mascot("lose",S.choice)}<span class="kick">Out of tries</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip">+0 · new word tomorrow</span></div><p class="vs">${esc(o.vs||"")}</p>`;
-  else if(o.kind==="swin") h=`${mascot("win",S.choice)}<span class="kick">${esc(o.level)} sudoku solved</span><div class="big">${letters("Solved!")}</div><div class="pts"><span class="chip lemon">+${o.pts}</span></div><p class="vs">${esc(o.vs||"")}</p>`+(()=>{const [l,q]=quoteOfDay(o.lk);return card(l,q)})();
+  else if(o.kind==="swin") h=`${mascot("win",S.choice)}<span class="kick">${esc(o.level)} sudoku solved</span><div class="big">${letters("Solved!")}</div><div class="pts"><span class="chip lemon">+${o.pts*xMult("sudoku")}</span>${xMult("sudoku")>1?'<span class="chip">×2 wildcard</span>':""}</div><p class="vs">${esc(o.vs||"")}</p>`+(()=>{const [l,q]=quoteOfDay(o.lk);return card(l,q)})();
   else if(o.kind==="dsent") h=`<span class="kick">Drawing sent</span><div class="frame small">${sketchSVG(o.strokes)}</div><div class="pts"><span class="chip">+${DPTS.draw} if guessed · +${DPTS.draw+DPTS.drawFirst} on the first try</span></div>`+card("Artists say",nextArt());
   else if(o.kind==="dwon") h=`${mascot("win",S.choice)}<span class="kick">On try ${o.at+1}</span><div class="big">${letters(o.word.toUpperCase())}</div>
-      <div class="pts"><span class="chip lemon">you +${o.mine}</span><span class="chip tomato">${esc(o.otherName)} +${o.theirs}</span></div>`+card("Artists say",nextArt());
+      <div class="pts"><span class="chip lemon">you +${o.mine*xMult("draw")}</span><span class="chip tomato">${esc(o.otherName)} +${o.theirs*xMult("draw")}</span>${xMult("draw")>1?'<span class="chip">×2 wildcard</span>':""}</div>`+card("Artists say",nextArt());
   else if(o.kind==="dlost") h=`${mascot("lose",S.choice)}<span class="kick">Out of tries</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip">+0 for both · new round next</span></div>`;
   el.innerHTML=`<div class="in">${h}${cta("ovclose","Next")}</div>`;
   el.hidden=false; document.body.style.overflow="hidden";
@@ -3272,6 +3530,12 @@ function validateAll(){
 function go(screen){S.screen=screen;S.err=S.err.startsWith("Couldn't")?S.err:"";W.msg="";W.cur="";SS.sel=-1;if(screen!=="sudoku")SS.level=null;if(screen==="pe")ensureCurrent(LIVE);if(screen==="draw")ensureDraw(LIVE);render();scrollTo(0,0)}
 function bind(){
   document.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>pickCat(b.dataset.pick));
+  document.querySelectorAll("[data-pick-item]").forEach(b=>b.onclick=()=>{WSel.pick=b.dataset.pickItem;render()});
+  document.querySelectorAll("[data-wear]").forEach(b=>b.onclick=()=>wearTap(b.dataset.wear));
+  document.querySelectorAll("[data-takeoff]").forEach(b=>b.onclick=()=>{const ps=prizeState(S.choice);saveWard(S.choice,{owned:ps.owned,wearing:ps.wearing.filter(x=>x!==b.dataset.takeoff)})});
+  document.querySelectorAll("[data-tas]").forEach(b=>b.onclick=()=>testSwitch(b.dataset.tas));
+  document.querySelectorAll("[data-tact]").forEach(b=>b.onclick=()=>testAct(b.dataset.tact));
+  document.querySelectorAll("[data-treset]").forEach(b=>b.onclick=()=>{try{Object.keys(localStorage).filter(k=>k.startsWith("pt.")).forEach(k=>{if(k!=="pt.test")localStorage.removeItem(k)})}catch(e){}location.reload()});
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
   document.querySelectorAll("[data-sheet]").forEach(b=>b.onclick=()=>openSheet(b.dataset.sheet));
   document.querySelectorAll("[data-close]").forEach(b=>b.onclick=closeSheet);
@@ -3287,7 +3551,7 @@ function bind(){
   document.querySelectorAll("[data-dguess]").forEach(inp=>{const n=inp.dataset.dguess;
     inp.oninput=()=>{if(/\n/.test(inp.value))inp.value=inp.value.replace(/\n/g," ");S.drafts["dg"+n]=inp.value};
     inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();doDrawGuess(n)}}});
-  document.querySelectorAll("[data-act]").forEach(b=>{if(b.dataset.act==="ovclose")return;if(/^d(undo|clear|reroll|send|guess)$/.test(b.dataset.act)){b.onclick=()=>drawAct(b.dataset.act,b.dataset.n);return}b.onclick=()=>{
+  document.querySelectorAll("[data-act]").forEach(b=>{if(b.dataset.act==="ovclose")return;if(/^d(undo|clear|reroll|send|guess)$/.test(b.dataset.act)){b.onclick=()=>drawAct(b.dataset.act,b.dataset.n);return}if(b.dataset.act==="takeitem"){b.onclick=takeItem;return}b.onclick=()=>{
     const n=b.dataset.n||b.closest("[data-round]")?.dataset.round, a=b.dataset.act, r=n&&roundOf(n);
     if(a==="reroll"){const k=(r.rerolls??(r.rerolled?1:0))+1; if(k<=2) saveRound({...r,word:pickWord((LIVE.meta.seed||"pe")+"#"+r.n,k,LIVE),skipped:[...(r.skipped||[]),r.word],rerolls:k,rerolled:true},LIVE)}
     if(a==="send"){const cl=S.drafts["c"+n].map(c=>tokens(c).join(" ")).filter(Boolean);saveRound({...r,clues:cl,status:"guessing"},LIVE);showOverlay({kind:"sent",clues:cl})}
@@ -3316,8 +3580,9 @@ function doGuess(n){
 /* ---------- storage: Supabase (the app), the artifact's own store (preview), or this device only ---------- */
 const store={get(){try{return localStorage.getItem("peshka.cat")}catch(e){return null}},
   set(v){try{v?localStorage.setItem("peshka.cat",v):localStorage.removeItem("peshka.cat")}catch(e){}}};
-const FB={mode:null,lkey:"pt.local",url:null,key:null,code:"playtime",db:null,
+const FB={mode:null,lkey:"pt.local",lkey:"pt.local",url:null,key:null,code:"playtime",db:null,
   async init(){
+    if(window.PT_TEST){this.mode="local";this.lkey="pt.testdb";this.code="test";return true}
     const cfg=window.PLAYTIME_CONFIG||{};
     if(cfg.supabaseUrl&&cfg.supabaseKey&&!String(cfg.supabaseUrl).includes("ВСТАВЬ")){
       this.mode="supabase"; this.url=String(cfg.supabaseUrl).trim().replace(/\/+$/,"").replace(/\/rest\/v1$/,""); this.key=String(cfg.supabaseKey).trim();
@@ -3352,19 +3617,20 @@ async function saveRound(r,G=LIVE){
   try{await FB.save(rid(r.n),r)}catch(e){S.err="Couldn't save the move. Check the connection and try again.";render()}
 }
 function startLive(){
-  LIVE.me=S.choice; LIVE.meta={players:["LS","SH"],tags:{LS:"LS",SH:"SH"},seed:FB.code}; LIVE.solo={}; LIVE.draws={};
+  LIVE.me=S.choice; LIVE.meta={players:["LS","SH"],tags:{LS:"LS",SH:"SH"},seed:FB.code}; LIVE.solo={}; LIVE.draws={}; LIVE.ward={};
   S.liveOk=true; S.G=LIVE; S.view="ready";
   let got=false; const timer=setTimeout(()=>{if(!got){S.err="No connection to the database. Check the internet.";render()}},10000);
   let lastSig="";
   FB.watch(snap=>{got=true;clearTimeout(timer);S.loaded=true;const hadErr=!!S.err;if(S.err.startsWith("No connection")||S.err.startsWith("The database"))S.err="";
       const sig=JSON.stringify(snap.docs.map(d=>[d.id,d.data()]).sort((x,y)=>x[0]<y[0]?-1:1));
       if(sig===lastSig&&!hadErr) return; lastSig=sig;
-      LIVE.rounds={};LIVE.solo={};LIVE.draws={};snap.docs.forEach(d=>{const v=d.data();if(!v)return;if(v.kind==="draw")LIVE.draws[d.id]=v;else if(typeof v.n==="number")LIVE.rounds[d.id]=v;else if(v.kind)LIVE.solo[d.id]=v});
+      LIVE.rounds={};LIVE.solo={};LIVE.draws={};LIVE.ward={};snap.docs.forEach(d=>{const v=d.data();if(!v)return;if(v.kind==="wardrobe")LIVE.ward[v.player]=v;else if(v.kind==="draw")LIVE.draws[d.id]=v;else if(typeof v.n==="number")LIVE.rounds[d.id]=v;else if(v.kind)LIVE.solo[d.id]=v});
       if(LIVE.me&&S.screen==="pe") ensureCurrent(LIVE); if(LIVE.me&&S.screen==="draw") ensureDraw(LIVE); render()},
     e=>{S.err="The database isn't responding ("+(e&&e.code||"no connection")+"). Check the internet and config.js.";render()});
   render();
 }
 (()=>{const c=store.get(); if(c==="LS"||c==="SH"){S.choice=c;S.myTag=c}})();
+if(window.PT_TEST&&!S.choice){S.choice="LS";S.myTag="LS"}
 
 S.screen="home";
 (async()=>{await FB.init(); startLive()})();
