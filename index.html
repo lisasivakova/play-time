@@ -257,6 +257,11 @@ svg.sk path[style]{stroke-dasharray:1 1}
 
 
 button,.key,.cell{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+
+.season{margin:0 0 -4px;font:600 12.5px var(--body);color:var(--ink-2);text-align:center}
+.pl .cap{display:flex;align-items:center;gap:3px}
+svg.mini{width:13px;height:10px;display:inline-block;vertical-align:-1px}
+.wrival,.vs{margin:0;text-align:center;font:600 13.5px var(--body);color:var(--ink-2)}
 </style>
 
 </head>
@@ -2709,7 +2714,38 @@ function ensureCurrent(G=S.G){
 /* ---------- scores across all games ---------- */
 function pePoints(tag){let t=0;for(const r of roundsList(LIVE)){const s=scoreRound(r);t+=s[tag]||0}return t}
 function soloPoints(tag){let t=0;for(const v of Object.values(LIVE.solo||{})){if(v.player===tag)t+=v.points||0}return t}
-function totalPoints(tag){return pePoints(tag)+soloPoints(tag)+drawPoints(tag)}
+function totalPoints(tag){return weekPoints(tag,weekOf(today()))}
+/* ---------- weekly seasons ---------- */
+/* every point carries a date; scores reset each Monday (Moscow time), the week's winner takes a crown */
+const weekOf=d=>{const n=dayNum(d);return n-((n+3)%7)}; /* day number of that week's Monday */
+const SPTS=l=>(SUDOKU_LEVELS.find(x=>x.k===l)||{pts:0}).pts;
+function wordleOf(tag,d){return (LIVE.solo||{})[soloId("wordle",d,tag)]}
+const wTries=v=>v.status==="won"?v.guesses.length:7;
+function wordleDuel(d){ /* +1 to whoever needed fewer tries, once both have played that day */
+  const a=wordleOf("LS",d), b=wordleOf("SH",d); if(!a||!b) return null;
+  const ta=wTries(a), tb=wTries(b); if(ta===tb||Math.min(ta,tb)>6) return {winner:null};
+  return {winner:ta<tb?"LS":"SH"};
+}
+function ledger(){
+  const L=[], add=(tag,pts,d)=>{if(pts&&d)L.push({tag,pts,wk:weekOf(d)})};
+  for(const v of Object.values(LIVE.solo||{})){
+    if(v.kind==="sudoku") add(v.player,SPTS(v.level),v.date);
+    if(v.kind==="wordle") add(v.player,v.points||0,v.date);
+  }
+  const days=new Set(Object.values(LIVE.solo||{}).filter(v=>v.kind==="wordle").map(v=>v.date));
+  for(const d of days){const w=wordleDuel(d); if(w&&w.winner) add(w.winner,1,d)}
+  for(const r of roundsList(LIVE)){if(r.status!=="solved"&&r.status!=="missed")continue;const s=scoreRound(r);for(const t in s)add(t,s[t],r.endedAt||r.startedAt)}
+  for(const r of drawList(LIVE)){if(r.status!=="solved")continue;const s=scoreDraw(r);for(const t in s)add(t,s[t],r.endedAt||r.startedAt)}
+  return L;
+}
+function weekPoints(tag,wk){let t=0;for(const e of ledger())if(e.tag===tag&&e.wk===wk)t+=e.pts;return t}
+function crowns(){ /* finished weeks only; a tie gives no crown */
+  const L=ledger(), now=weekOf(today()), weeks={};
+  for(const e of L){if(e.wk>=now)continue;(weeks[e.wk]||(weeks[e.wk]={LS:0,SH:0}))[e.tag]+=e.pts}
+  const c={LS:0,SH:0}; for(const w of Object.values(weeks)){if(w.LS>w.SH)c.LS++;else if(w.SH>w.LS)c.SH++}
+  return c;
+}
+const daysLeft=()=>{const n=dayNum(today());return 6-((n+3)%7)};
 const soloId=(kind,date,tag,level)=>kind==="wordle"?`w-${date}-${tag}`:`s-${date}-${level}-${tag}`;
 const soloDone=(kind,date,tag,level)=>(LIVE.solo||{})[soloId(kind,date,tag,level)];
 async function saveSolo(kind,data){
@@ -2720,6 +2756,7 @@ async function saveSolo(kind,data){
 
 /* ---------- shared bits ---------- */
 const SPARK=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1C11 8 12 9 19 10C12 11 11 12 10 19C9 12 8 11 1 10C8 9 9 8 10 1Z" fill="currentColor"/></svg>`;
+const MINICROWN=`<svg class="mini" viewBox="0 0 24 18" aria-label="weeks won"><path d="M2 15L1 4l6 5 5-8 5 8 6-5-1 11z" fill="currentColor"/></svg>`;
 const CROWN=`<svg class="crown" viewBox="0 0 24 18" aria-label="leading"><path d="M2 15L1 4l6 5 5-8 5 8 6-5-1 11z" fill="var(--ink)"/><rect x="2" y="15.5" width="20" height="2.5" rx="1" fill="var(--ink)"/></svg>`;
 const cta=(act,label,dis,extra="")=>`<button class="cta" data-act="${act}" ${extra} ${dis?"disabled":""}>${SPARK}<span>${label}</span>${SPARK}</button>`;
 const BACK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>`;
@@ -2778,9 +2815,9 @@ function loginScreen(){
 
 /* ---------- home ---------- */
 function homeScreen(){
-  const ls=totalPoints("LS"), sh=totalPoints("SH"), lead=ls===sh?null:(ls>sh?"LS":"SH"), me=S.choice, d=today();
+  const ls=totalPoints("LS"), sh=totalPoints("SH"), lead=ls===sh?null:(ls>sh?"LS":"SH"), me=S.choice, d=today(), cr=crowns(), dl=daysLeft();
   const player=(tag,pts)=>`<div class="pl ${tag==="SH"?"white":""} ${tag===me?"me":""}"><div class="plhead"><span class="dot ${tag==="SH"?"white":""}"></span><b>${tag}</b>${lead===tag?CROWN:""}</div>
-    <span class="pts">${pts}</span><span class="cap">${tag===me?"you":"points"}</span></div>`;
+    <span class="pts">${pts}</span><span class="cap">${tag===me?"you":"points"} · ${MINICROWN}${cr[tag]}</span></div>`;
   const w=soloDone("wordle",d,me);
   const wStatus=w?(w.status==="won"?`Solved in ${w.guesses.length} · +${w.points}`:`Missed · the word was ${w.word.toUpperCase()}`):(wLoad(d).length?`In progress · ${wLoad(d).length}/6`:"Today's word is waiting");
   const lv=SUDOKU_LEVELS.map(l=>soloDone("sudoku",d,me,l.k)?`${l.name} ✓`:null).filter(Boolean);
@@ -2799,7 +2836,7 @@ function homeScreen(){
   const IS=`<svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="5" width="30" height="30" rx="4"/><path d="M15 5v30M25 5v30M5 15h30M5 25h30" stroke-width="1.6"/></g><text x="10" y="13.5" font-size="7" font-weight="700" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">5</text><text x="27" y="33.5" font-size="7" font-weight="700" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">9</text></svg>`;
   const IP=`<svg viewBox="0 0 40 40"><text x="20" y="29" text-anchor="middle" font-size="26" font-weight="800" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">П</text></svg>`;
   return topBar("Play Time","choose a game")+errBox()+
-    `<div class="board">${player("LS",ls)}${player("SH",sh)}</div>
+    `<p class="season">This week · ${dl===0?"last day — crown at midnight":dl===1?"1 day left":dl+" days left"}</p><div class="board">${player("LS",ls)}${player("SH",sh)}</div>
      <div class="hcat">${mascot("idle",me)}</div>
      <section class="group"><h2>Play solo</h2><p class="gsub">New every day · the same puzzle for both of you</p>
        ${tile("wordle","Wordle","EN",wStatus,IW)}${tile("sudoku","Sudoku","",sStatus,IS)}</section>
@@ -2886,8 +2923,7 @@ async function saveDraw(r,G=LIVE){
 }
 function scoreDraw(r){
   const s={[r.drawer]:0,[r.guesser]:0};
-  if(r.strokes) s[r.drawer]+=DPTS.draw;
-  if(r.status==="solved"){s[r.guesser]+=DPTS.guess[r.solvedAt]||0; if(r.solvedAt===0) s[r.drawer]+=DPTS.drawFirst}
+  if(r.status==="solved"){s[r.guesser]+=DPTS.guess[r.solvedAt]||0; s[r.drawer]+=DPTS.draw+(r.solvedAt===0?DPTS.drawFirst:0)}
   return s;
 }
 function drawPoints(tag){let t=0;for(const r of drawList(LIVE))t+=scoreDraw(r)[tag]||0;return t}
@@ -3024,8 +3060,11 @@ function wordleScreen(){
   const best={};g.forEach(x=>wScore(x,ans).forEach((s,i)=>{const L=x[i],rank={correct:3,present:2,absent:1};if(!best[L]||rank[s]>rank[best[L]])best[L]=s}));
   const KB=["qwertyuiop","asdfghjkl","+zxcvbnm-"].map(row=>`<div class="krow">${[...row].map(k=>k==="+"?`<button class="key wide" data-k="enter">Enter</button>`:k==="-"?`<button class="key wide" data-k="back" aria-label="Delete">⌫</button>`:`<button class="key ${best[k]||""}" data-k="${k}">${k.toUpperCase()}</button>`).join("")}</div>`).join("");
   W.justRow=-1;
+  const other=S.choice==="LS"?"SH":"LS", ow=wordleOf(other,d), duel=done&&wordleDuel(d);
+  const rival=!done?"":!ow?`${other} hasn't played yet`:
+    `${other} ${ow.status==="won"?`solved it in ${ow.guesses.length}`:"didn't get it"}`+(duel?(duel.winner===S.choice?" · you win today, +1":duel.winner?` · ${other} wins today, +1`:" · a tie"):"");
   const status=done?(done.status==="won"?`Solved in ${done.guesses.length} · +${done.points}`:`The word was ${ans.toUpperCase()}`):W.msg||"Guess the five-letter word in six tries";
-  return topBar("Wordle",`#${dayNum(d)-W_START+1} · ${fmtDayEn(d)}`)+errBox()+`<p class="wmsg" role="status">${esc(status)}</p><div class="wgrid">${rows}</div>${over?`<p class="wnext">Next word tomorrow</p>`:`<div class="kb">${KB}</div>`}`;
+  return topBar("Wordle",`#${dayNum(d)-W_START+1} · ${fmtDayEn(d)}`)+errBox()+`<p class="wmsg" role="status">${esc(status)}</p><div class="wgrid">${rows}</div>${over?`<p class="wnext">Next word tomorrow</p>${rival?`<p class="wrival">${esc(rival)}</p>`:""}`:`<div class="kb">${KB}</div>`}`;
 }
 /* typing only repaints the current row and the message; the whole screen redraws on Enter */
 function wPaint(){
@@ -3046,7 +3085,9 @@ function wKeyPress(k){
     const won=ng[ng.length-1]===ans, lost=!won&&ng.length>=6;
     if(won||lost){const pts=won?7-ng.length:0;
       saveSolo("wordle",{kind:"wordle",player:S.choice,date:d,word:ans,guesses:ng,status:won?"won":"lost",points:pts});
-      setTimeout(()=>showOverlay({kind:won?"wwin":"wlose",word:ans,tries:ng.length,pts}),won?900:700);}
+      setTimeout(()=>{const other=S.choice==="LS"?"SH":"LS",duel=wordleDuel(d),ow=wordleOf(other,d);
+        const vs=!ow?`${other} hasn't played yet`:`${other}: ${ow.status==="won"?"solved in "+ow.guesses.length:"missed"}`+(duel&&duel.winner===S.choice?" · you beat them, +1":duel&&duel.winner?` · ${other} wins today`:" · a tie");
+        showOverlay({kind:won?"wwin":"wlose",word:ans,tries:ng.length,pts,vs})},won?900:700);}
     else render();
     return;
   }
@@ -3054,7 +3095,7 @@ function wKeyPress(k){
 }
 
 /* ---------- Sudoku ---------- */
-const SUDOKU_LEVELS=[{k:"easy",name:"Easy",givens:40,pts:2},{k:"medium",name:"Medium",givens:32,pts:4},{k:"hard",name:"Hard",givens:26,pts:6}];
+const SUDOKU_LEVELS=[{k:"easy",name:"Easy",givens:40,pts:1},{k:"medium",name:"Medium",givens:32,pts:2},{k:"hard",name:"Hard",givens:26,pts:3}];
 function rng(seed){let a=hash(seed);return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function sCount(g,limit=2){ /* counts solutions up to limit, bitmask solver */
   const row=Array(9).fill(0),col=Array(9).fill(0),box=Array(9).fill(0),empty=[];
@@ -3089,7 +3130,7 @@ function sudokuScreen(){
   const d=today();
   if(!SS.level){
     const lv=SUDOKU_LEVELS.map(l=>{const done=soloDone("sudoku",d,S.choice,l.k);
-      return `<button class="game" data-level="${l.k}"><span class="gtext"><b>${l.name}</b><span>${done?`Solved today · +${done.points}`:`+${l.pts} points`}</span></span><span class="glang">${done?"✓":"→"}</span></button>`}).join("");
+      return `<button class="game" data-level="${l.k}"><span class="gtext"><b>${l.name}</b><span>${done?`Solved today · +${SUDOKU_LEVELS.find(x=>x.k===l.k).pts}`:`+${l.pts} points`}</span></span><span class="glang">${done?"✓":"→"}</span></button>`}).join("");
     return topBar("Sudoku",fmtDayEn(d))+errBox()+`<div class="hero"><h1>Pick a level</h1><span class="sub">a new puzzle every day · the same for both of you</span></div><section class="group">${lv}</section>`;
   }
   const {puz,sol}=sudokuFor(d,SS.level), done=soloDone("sudoku",d,S.choice,SS.level);
@@ -3101,7 +3142,7 @@ function sudokuScreen(){
     const cls=["sc",given?"given":"",i===SS.sel?"sel":"",SS.sel>=0&&(r===sr||c===sc||((r/3|0)===(sr/3|0)&&(c/3|0)===(sc/3|0)))?"peer":"",selV&&v===selV?"same":"",conflict?"bad":"",c%3===2&&c<8?"br":"",r%3===2&&r<8?"bb":""].filter(Boolean).join(" ");
     cells+=`<button class="${cls}" data-cell="${i}" aria-label="Row ${r+1} column ${c+1}${v?", "+v:""}">${v||""}</button>`}
   const L=SUDOKU_LEVELS.find(x=>x.k===SS.level);
-  const pad=done?`<p class="wnext">Solved · +${done.points}. A new one tomorrow.</p>`:`<div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="key" data-num="${n}">${n}</button>`).join("")}<button class="key" data-num="0" aria-label="Erase">⌫</button></div>`;
+  const pad=done?`<p class="wnext">Solved · +${SPTS(SS.level)}. A new one tomorrow.</p><p class="wrival">${(()=>{const o=S.choice==="LS"?"SH":"LS";return soloDone("sudoku",d,o,SS.level)?`${o} solved this one too`:`${o} hasn't solved this one yet`})()}</p>`:`<div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="key" data-num="${n}">${n}</button>`).join("")}<button class="key" data-num="0" aria-label="Erase">⌫</button></div>`;
   return topBar("Sudoku",`${L.name} · ${fmtDayEn(d)}`)+errBox()+`<div class="sgrid">${cells}</div>${pad}<button class="link center" data-level="">other levels</button>`;
 }
 function sInput(n){
@@ -3110,7 +3151,7 @@ function sInput(n){
   const cur=sLoad(d,SS.level)||[...puz]; cur[SS.sel]=n; sSave(d,SS.level,cur);
   if(cur.every((v,i)=>v===sol[i])){const L=SUDOKU_LEVELS.find(x=>x.k===SS.level);
     saveSolo("sudoku",{kind:"sudoku",player:S.choice,date:d,level:SS.level,status:"won",points:L.pts});
-    setTimeout(()=>showOverlay({kind:"swin",level:L.name,lk:L.k,pts:L.pts}),300)}
+    setTimeout(()=>showOverlay({kind:"swin",level:L.name,lk:L.k,pts:L.pts,vs:(()=>{const o=S.choice==="LS"?"SH":"LS";return soloDone("sudoku",d,o,L.k)?`${o} solved this one too`:`${o} hasn't solved this one yet`})()}),300)}
   render();
 }
 
@@ -3152,11 +3193,12 @@ function openSheet(kind){
   }
   if(kind==="drules") h=`<div class="hd"><h2>Sketch rules</h2><button class="x" data-close aria-label="Close">✕</button></div>
     <p>Take turns. One player gets a word (a noun or a verb) and draws it with the black pen; the other has 5 tries to guess it. Next round the roles swap. No timer.</p>
+    <p><b>Artist:</b> +1 when the drawing is guessed, +2 if it lands on the first try — so draw to be understood.</p>
     <p><b>Drawing:</b> pictures only — no letters, numbers or arrows pointing at letters. You can swap the word twice. Undo and Clear are free.</p>
     <p><b>Guessing:</b> one word per try. Plurals, -ing forms and small typos count.</p>
     <table><thead><tr><th>Guessed</th><th class="r">Guesser</th><th class="r">Artist</th></tr></thead><tbody>
       ${DPTS.guess.map((p,i)=>`<tr><td>On try ${i+1}</td><td class="r">+${p}</td><td class="r">+${DPTS.draw+(i===0?DPTS.drawFirst:0)}</td></tr>`).join("")}
-      <tr><td>Not guessed</td><td class="r">0</td><td class="r">+${DPTS.draw}</td></tr></tbody></table>`;
+      <tr><td>Not guessed</td><td class="r">0</td><td class="r">0</td></tr></tbody></table>`;
   if(kind==="gallery"){
     const list=drawList(LIVE).filter(r=>r.strokes&&(r.status==="solved"||r.status==="missed")).reverse().slice(0,60);
     h=`<div class="hd"><h2>Gallery</h2><button class="x" data-close aria-label="Close">✕</button></div>`+(list.length?`<div class="gallery">${list.map(r=>`<figure>${sketchSVG(r.strokes)}<figcaption><b>${esc(r.word)}</b>${r.status==="missed"?" ✕":""}<span>№${r.n} · by ${esc(r.drawer)}</span></figcaption></figure>`).join("")}</div>`:`<p>No drawings yet.</p>`);
@@ -3197,13 +3239,13 @@ function showOverlay(o){
   else if(o.kind==="won") h=`${mascot("win",S.choice)}<span class="kick">On try ${o.at+1}${o.sniper?" · one word":""}</span><div class="big">${letters(o.word)}</div>
       <div class="pts"><span class="chip lemon">you +${o.mine}</span>${o.theirs?`<span class="chip tomato">${esc(o.otherName)} +${o.theirs}</span>`:""}</div>`;
   else if(o.kind==="lost") h=`${mascot("lose",S.choice)}<span class="kick">Not guessed</span><div class="big">${letters(o.word)}</div><div class="pts"><span class="chip">+0 · your turn next</span></div>`;
-  else if(o.kind==="wwin") h=`${mascot("win",S.choice)}<span class="kick">Solved in ${o.tries}</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip lemon">+${o.pts}</span></div>`+card("For you",litOfDay());
-  else if(o.kind==="wlose") h=`${mascot("lose",S.choice)}<span class="kick">Out of tries</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip">+0 · new word tomorrow</span></div>`;
-  else if(o.kind==="swin") h=`${mascot("win",S.choice)}<span class="kick">${esc(o.level)} sudoku solved</span><div class="big">${letters("Solved!")}</div><div class="pts"><span class="chip lemon">+${o.pts}</span></div>`+(()=>{const [l,q]=quoteOfDay(o.lk);return card(l,q)})();
-  else if(o.kind==="dsent") h=`<span class="kick">Drawing sent</span><div class="frame small">${sketchSVG(o.strokes)}</div><div class="pts"><span class="chip lemon">+${DPTS.draw} for drawing</span></div>`+card("Artists say",nextArt());
+  else if(o.kind==="wwin") h=`${mascot("win",S.choice)}<span class="kick">Solved in ${o.tries}</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip lemon">+${o.pts}</span></div><p class="vs">${esc(o.vs||"")}</p>`+card("For you",litOfDay());
+  else if(o.kind==="wlose") h=`${mascot("lose",S.choice)}<span class="kick">Out of tries</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip">+0 · new word tomorrow</span></div><p class="vs">${esc(o.vs||"")}</p>`;
+  else if(o.kind==="swin") h=`${mascot("win",S.choice)}<span class="kick">${esc(o.level)} sudoku solved</span><div class="big">${letters("Solved!")}</div><div class="pts"><span class="chip lemon">+${o.pts}</span></div><p class="vs">${esc(o.vs||"")}</p>`+(()=>{const [l,q]=quoteOfDay(o.lk);return card(l,q)})();
+  else if(o.kind==="dsent") h=`<span class="kick">Drawing sent</span><div class="frame small">${sketchSVG(o.strokes)}</div><div class="pts"><span class="chip">+${DPTS.draw} if guessed · +${DPTS.draw+DPTS.drawFirst} on the first try</span></div>`+card("Artists say",nextArt());
   else if(o.kind==="dwon") h=`${mascot("win",S.choice)}<span class="kick">On try ${o.at+1}</span><div class="big">${letters(o.word.toUpperCase())}</div>
       <div class="pts"><span class="chip lemon">you +${o.mine}</span><span class="chip tomato">${esc(o.otherName)} +${o.theirs}</span></div>`+card("Artists say",nextArt());
-  else if(o.kind==="dlost") h=`${mascot("lose",S.choice)}<span class="kick">Out of tries</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip">+0 · ${esc(o.otherName)} +${o.theirs} for drawing</span></div>`;
+  else if(o.kind==="dlost") h=`${mascot("lose",S.choice)}<span class="kick">Out of tries</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip">+0 for both · new round next</span></div>`;
   el.innerHTML=`<div class="in">${h}${cta("ovclose","Next")}</div>`;
   el.hidden=false; document.body.style.overflow="hidden";
   const b=el.querySelector('[data-act="ovclose"]');
