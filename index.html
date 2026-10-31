@@ -235,7 +235,7 @@ td{padding:9px 0;border-bottom:1.5px dashed var(--ink-3);font-size:14px}
 
 /* Sketch */
 .padwrap{border:2.5px solid var(--ink);border-radius:20px;background:#fff;overflow:hidden;aspect-ratio:1;width:100%}
-.pad{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair;background:#fff}
+.skpad{display:block;width:100%;height:100%;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:crosshair;background:#fff}
 .padtools{display:flex;gap:10px;justify-content:center}
 .ptool{border:2px solid var(--ink);border-radius:99px;background:var(--card);padding:8px 18px;font:700 14px var(--display);color:var(--ink)}
 .ptool:disabled{opacity:.35}
@@ -255,6 +255,8 @@ svg.sk path[style]{stroke-dasharray:1 1}
 .gallery figcaption{font:500 12px var(--mono);color:var(--ink-2);display:flex;flex-direction:column}
 .gallery figcaption b{font:800 15px var(--display);color:var(--ink)}
 
+
+button,.key,.cell{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 </style>
 
 </head>
@@ -2852,7 +2854,7 @@ function peScreen(){
   if(!c) return topBar("Игра на П","battle mode")+`<div class="hero">${mascot("idle",S.choice)}<h1>Getting a word…</h1></div>`;
   const st=stage(c);
   return topBar("Игра на П",`round ${c.n}`)+errBox()+`<div class="hero">${mascot(st.m,S.choice)}${st.h}</div>`+
-    (st.round?`<div data-round="${st.round}" style="display:flex;flex-direction:column;gap:16px">${st.b}</div>`:st.b)+peScoreLine()+prevLine(prev)+peTools();
+    (st.round?`<div data-round="${st.round}" style="display:flex;flex-direction:column;gap:16px">${st.b}</div>`:st.b)+prevLine(prev)+peTools();
 }
 
 /* ---------- Sketch (battle): one draws with a black pen, the other guesses in 5 tries ---------- */
@@ -2924,7 +2926,7 @@ function paintCanvas(){
 function bindPad(){
   const cv=document.getElementById("pad"); if(!cv) return;
   const pt=e=>{const r=cv.getBoundingClientRect();return [Math.round((e.clientX-r.left)/r.width*1000),Math.round((e.clientY-r.top)/r.height*1000)].map(v=>Math.max(0,Math.min(1000,v)))};
-  cv.onpointerdown=e=>{e.preventDefault();cv.setPointerCapture(e.pointerId);D.down=true;D.cur=pt(e);paintCanvas()};
+  cv.onpointerdown=e=>{e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}D.down=true;D.cur=pt(e);paintCanvas()};
   cv.onpointermove=e=>{if(!D.down)return;e.preventDefault();const [x,y]=pt(e),l=D.cur.length;if(Math.hypot(x-D.cur[l-2],y-D.cur[l-1])>=5){D.cur.push(x,y);paintCanvas()}};
   const end=()=>{if(!D.down)return;D.down=false;if(D.cur){D.strokes.push(D.cur);D.cur=null;dSave()}paintCanvas();if(D.pending){D.pending=false;render()}};
   cv.onpointerup=end; cv.onpointercancel=end; cv.onpointerleave=e=>{if(e.pointerType==="mouse")end()};
@@ -2940,7 +2942,7 @@ function drawStage(r){
     dLoad(r.n); const left=2-(r.rerolls||0);
     return {m:"write",h:`<h1>Draw this</h1><div class="secret"><span class="word">${esc(r.word)}</span>${left>0?`<button class="link" data-act="dreroll" data-n="${r.n}">another word · ${left} left</button>`:""}</div>
       <span class="sub">${r.type} · black pen only · no letters or numbers</span>`,
-      b:`<div class="padwrap"><canvas id="pad" class="pad" aria-label="Drawing board"></canvas></div>
+      b:`<div class="padwrap"><canvas id="pad" class="skpad" aria-label="Drawing board"></canvas></div>
         <div class="padtools"><button class="ptool" data-act="dundo" disabled>Undo</button><button class="ptool" data-act="dclear" disabled>Clear</button></div>
         ${cta("dsend","Send drawing",true,`data-n="${r.n}"`)}`};
   }
@@ -2971,7 +2973,7 @@ function drawScreen(){
   if(!c) return topBar("Sketch","battle mode")+`<div class="hero">${mascot("idle",S.choice)}<h1>Getting a word…</h1></div>`;
   const st=drawStage(c);
   return topBar("Sketch",`round ${c.n}`)+errBox()+`<div class="hero">${st.m==="guess"||(st.m==="write")?"":mascot(st.m,S.choice)}${st.h}</div>`+
-    `<div style="display:flex;flex-direction:column;gap:14px">${st.b}</div>`+drawScoreLine()+drawPrev(prev)+drawTools();
+    `<div style="display:flex;flex-direction:column;gap:14px">${st.b}</div>`+drawPrev(prev)+drawTools();
 }
 function doDrawGuess(n){
   const r=LIVE.draws[drid(+n)], inp=document.getElementById("dg-"+n); if(!r||!inp) return;
