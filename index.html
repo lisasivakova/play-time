@@ -8,7 +8,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Play Time">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#F7F4EE">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -18,8 +18,9 @@ html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset
 body{margin:0;-webkit-text-size-adjust:100%}
 /* Layout: one phone column on white paper, black ink, red as the only accent; two cat mascots (LS black, SH white) — ink-outlined top bar, hand-drawn П mascot as hero, title + score bar, outlined boxes, a black sparkle CTA, a row of round tool buttons. Single deliberate light look. */
 :root{
-  --paper:#FFFFFF; --card:#FFFFFF; --ink:#111111; --ink-2:#5C5C5C; --ink-3:#ABABAB; --line:#111111;
-  --red:#111111; --red-soft:#EFEFEF;
+  --paper:#F7F4EE; --card:#FFFDF9; --ink:#111111; --ink-2:#5E5952; --ink-3:#B0AAA1; --line:#111111;
+  --red:#111111; --red-soft:#EFEAE1;
+  --on-ink:#FFFFFF; --key:#E4DFD5; --wb:#DCD6CB; --wb2:#8F897F; --soft1:#F3EFE7; --soft2:#E4DED3; --grid:#D3CDC2; --ink-u:#4D4943; --scrim:rgba(20,18,16,.35);
   --display:"Helvetica Neue",Helvetica,Arial,sans-serif;
   --mono:"Helvetica Neue",Helvetica,Arial,sans-serif;
   --body:"Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -53,7 +54,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:
 .hero .sub{font:500 13px var(--mono);color:var(--ink-2)}
 .hero .sub b{color:var(--ink)}
 .secret{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
-.word{font:800 22px var(--display);color:#fff;background:var(--red);border:2.5px solid var(--ink);border-radius:12px;padding:4px 14px;transform:rotate(-1.5deg)}
+.word{font:800 22px var(--display);color:var(--on-ink);background:var(--red);border:2.5px solid var(--ink);border-radius:12px;padding:4px 14px;transform:rotate(-1.5deg)}
 .link{background:none;border:0;font:700 12px var(--mono);color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px}
 
 /* score bar */
@@ -82,7 +83,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:
 .tag{font:700 14px var(--display);padding:4px 12px;border-radius:99px;border:2px solid var(--ink);background:var(--card);overflow-wrap:anywhere;text-decoration:line-through;text-decoration-thickness:2px;color:var(--ink-2)}
 .tag.hot{background:var(--red-soft);text-decoration:none;color:var(--ink)}
 .tag.hot::after{content:" тепло";font:700 10px var(--mono);color:var(--ink-2)}
-.tag.win{background:var(--red);border-color:var(--ink);text-decoration:none;color:#fff}
+.tag.win{background:var(--red);border-color:var(--ink);text-decoration:none;color:var(--on-ink)}
 .dots{display:flex;gap:6px;justify-content:center}
 .dots span{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:var(--card)}
 .dots span.used{background:var(--ink)}.dots span.win{background:var(--red)}
@@ -118,7 +119,7 @@ input.bad{background:var(--red-soft);border-color:var(--red)}
 .err{border:2.5px solid var(--ink);background:var(--red-soft);border-radius:16px;padding:10px 14px;font:500 13px var(--mono)}
 
 /* sheets */
-.scrim{position:fixed;inset:0;z-index:40;background:rgba(20,18,16,.35);display:flex;align-items:flex-end;justify-content:center;animation:fade .2s ease}
+.scrim{position:fixed;inset:0;z-index:40;background:var(--scrim);display:flex;align-items:flex-end;justify-content:center;animation:fade .2s ease}
 .sheet{width:100%;max-width:460px;max-height:86vh;overflow:auto;background:var(--paper);border:2.5px solid var(--ink);border-bottom:0;border-radius:28px 28px 0 0;
   padding:20px max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px;animation:rise .25s cubic-bezier(.2,.8,.2,1)}
 .sheet .hd{display:flex;justify-content:space-between;align-items:center}
@@ -144,7 +145,7 @@ td{padding:9px 0;border-bottom:1.5px dashed var(--ink-3);font-size:14px}
 .ov .big span{display:inline-block;animation:up .45s cubic-bezier(.2,.8,.2,1) both}
 .ov .pts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .chip{border:2.5px solid var(--ink);border-radius:99px;padding:6px 14px;font:800 13px var(--mono);background:var(--card)}
-.chip.lemon{background:var(--red);color:#fff}.chip.tomato{background:var(--ink);color:#fff}
+.chip.lemon{background:var(--red);color:var(--on-ink)}.chip.tomato{background:var(--ink);color:var(--on-ink)}
 .fact{width:100%;text-align:left;border:2.5px solid var(--ink);border-radius:20px;background:var(--card);padding:14px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:5px 5px 0 var(--red)}
 .fact .k{font:800 11px var(--mono);text-transform:uppercase;letter-spacing:.05em}
 .fact p{margin:0;font:500 16px/1.45 var(--body)}
@@ -194,15 +195,15 @@ td{padding:9px 0;border-bottom:1.5px dashed var(--ink-3);font-size:14px}
 .wgrid{display:grid;grid-template-rows:repeat(6,1fr);gap:6px;width:min(330px,100%);margin:0 auto}
 .wrow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .wrow.shake{animation:shake .4s}
-.wt{aspect-ratio:1;border:2.5px solid #d3d6da;display:grid;place-items:center;font-weight:800;font-size:28px;text-transform:uppercase;background:#fff;color:var(--ink)}
-.wt.filled{border-color:#878a8c}
+.wt{aspect-ratio:1;border:2.5px solid var(--wb);display:grid;place-items:center;font-weight:800;font-size:28px;text-transform:uppercase;background:var(--card);color:var(--ink)}
+.wt.filled{border-color:var(--wb2)}
 .wt.correct{background:#6aaa64;border-color:#6aaa64;color:#fff}
 .wt.present{background:#c9b458;border-color:#c9b458;color:#fff}
 .wt.absent{background:#787c7e;border-color:#787c7e;color:#fff}
 .wt.flip{animation:flip .5s both}
 .kb{display:flex;flex-direction:column;gap:7px;margin-top:4px}
 .krow{display:flex;gap:5px;justify-content:center}
-.key{flex:1;max-width:40px;height:54px;border:0;border-radius:8px;background:#d3d6da;color:var(--ink);font:800 15px var(--body);cursor:pointer;padding:0;touch-action:manipulation}
+.key{flex:1;max-width:40px;height:54px;border:0;border-radius:8px;background:var(--key);color:var(--ink);font:800 15px var(--body);cursor:pointer;padding:0;touch-action:manipulation}
 .key.wide{max-width:64px;flex:1.6;font-size:12.5px}
 .key.correct{background:#6aaa64;color:#fff}
 .key.present{background:#c9b458;color:#fff}
@@ -211,13 +212,13 @@ td{padding:9px 0;border-bottom:1.5px dashed var(--ink-3);font-size:14px}
 @keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 @keyframes flip{0%{transform:rotateX(90deg)}100%{transform:none}}
 /* ---------- sudoku ---------- */
-.sgrid{display:grid;grid-template-columns:repeat(9,1fr);border:3px solid var(--ink);width:min(380px,100%);margin:0 auto;aspect-ratio:1;background:#fff}
-.sc{border:0;border-right:1px solid #c9c9c9;border-bottom:1px solid #c9c9c9;background:#fff;font:500 22px var(--body);color:var(--ink);padding:0;cursor:pointer;aspect-ratio:1;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.sgrid{display:grid;grid-template-columns:repeat(9,1fr);border:3px solid var(--ink);width:min(380px,100%);margin:0 auto;aspect-ratio:1;background:var(--card)}
+.sc{border:0;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid);background:var(--card);font:500 22px var(--body);color:var(--ink);padding:0;cursor:pointer;aspect-ratio:1;display:grid;place-items:center;font-variant-numeric:tabular-nums}
 .sc.given{font-weight:800}
-.sc:not(.given){color:#4a4a4a}
+.sc:not(.given){color:var(--ink-u)}
 .sc.br{border-right:2.5px solid var(--ink)}.sc.bb{border-bottom:2.5px solid var(--ink)}
 .sc:nth-child(9n){border-right:0}
-.sc.peer{background:#f1f1f1}.sc.same{background:#dedede}.sc.sel{background:var(--ink);color:#fff}
+.sc.peer{background:var(--soft1)}.sc.same{background:var(--soft2)}.sc.sel{background:var(--ink);color:var(--on-ink)}
 .sc.bad{text-decoration:underline wavy;text-underline-offset:4px}
 .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;width:min(380px,100%);margin:0 auto}
 .pad .key{max-width:none;height:52px;font-size:20px}
@@ -234,12 +235,12 @@ td{padding:9px 0;border-bottom:1.5px dashed var(--ink-3);font-size:14px}
 @media (prefers-reduced-motion:reduce){.tw,.ov,.ov svg.mascot,.ov .big span,.scrim,.sheet{animation:none}}
 
 /* Sketch */
-.padwrap{border:2.5px solid var(--ink);border-radius:20px;background:#fff;overflow:hidden;aspect-ratio:1;width:100%}
-.skpad{display:block;width:100%;height:100%;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:crosshair;background:#fff}
+.padwrap{border:2.5px solid var(--ink);border-radius:20px;background:var(--card);overflow:hidden;aspect-ratio:1;width:100%}
+.skpad{display:block;width:100%;height:100%;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:crosshair;background:var(--card)}
 .padtools{display:flex;gap:10px;justify-content:center}
 .ptool{border:2px solid var(--ink);border-radius:99px;background:var(--card);padding:8px 18px;font:700 14px var(--display);color:var(--ink)}
 .ptool:disabled{opacity:.35}
-.frame{border:2.5px solid var(--ink);border-radius:20px;background:#fff;aspect-ratio:1;width:100%;overflow:hidden}
+.frame{border:2.5px solid var(--ink);border-radius:20px;background:var(--card);aspect-ratio:1;width:100%;overflow:hidden}
 .frame.small{width:min(220px,60vw);border-radius:16px}
 svg.sk{display:block;width:100%;height:100%}
 svg.sk path{fill:none;stroke:#111;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 0}
@@ -248,10 +249,10 @@ svg.sk path[style]{stroke-dasharray:1 1}
 @media (prefers-reduced-motion:reduce){svg.sk path[style]{animation:none!important;stroke-dasharray:1 0}}
 .blanks{display:inline-flex;gap:3px;vertical-align:middle}.blanks i{display:inline-block;width:9px;height:2.5px;background:var(--ink);border-radius:2px}
 .dtags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-.dprev{align-items:center}.dprev svg.thumb path{stroke-width:24}.dprev svg.thumb{width:52px;height:52px;flex:none;border:1.5px solid var(--ink-3);border-radius:10px;background:#fff}
+.dprev{align-items:center}.dprev svg.thumb path{stroke-width:24}.dprev svg.thumb{width:52px;height:52px;flex:none;border:1.5px solid var(--ink-3);border-radius:10px;background:var(--card)}
 .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .gallery figure{margin:0;display:flex;flex-direction:column;gap:6px}
-.gallery svg{border:2px solid var(--ink);border-radius:14px;background:#fff;aspect-ratio:1}
+.gallery svg{border:2px solid var(--ink);border-radius:14px;background:var(--card);aspect-ratio:1}
 .gallery figcaption{font:500 12px var(--mono);color:var(--ink-2);display:flex;flex-direction:column}
 .gallery figcaption b{font:800 15px var(--display);color:var(--ink)}
 
@@ -267,10 +268,10 @@ svg.mini{width:13px;height:10px;display:inline-block;vertical-align:-1px}
 .hcat svg.mascot{height:170px;width:auto;max-width:100%}
 .hbtns{display:flex;justify-content:center;margin-top:-6px}
 .wbtn{border:2.5px solid var(--ink);border-radius:99px;background:var(--card);color:var(--ink);padding:8px 18px;font:800 14px var(--body)}
-.prizebar{display:flex;align-items:center;gap:10px;width:100%;border:2.5px solid var(--ink);border-radius:18px;background:var(--ink);color:#fff;padding:14px 16px;font:800 15px var(--body);text-align:left}
+.prizebar{display:flex;align-items:center;gap:10px;width:100%;border:2.5px solid var(--ink);border-radius:18px;background:var(--ink);color:var(--on-ink);padding:14px 16px;font:800 15px var(--body);text-align:left}
 .wildline{margin:0;text-align:center;font:500 13px var(--body);color:var(--ink-2)}.wildline b{color:var(--ink)}
 .game.wild{box-shadow:5px 5px 0 var(--ink)}
-.x2{flex:none;border-radius:99px;background:var(--ink);color:#fff;padding:5px 10px;font:800 12px var(--body);white-space:nowrap}
+.x2{flex:none;border-radius:99px;background:var(--ink);color:var(--on-ink);padding:5px 10px;font:800 12px var(--body);white-space:nowrap}
 .stage{border:2.5px solid var(--ink);border-radius:22px;display:flex;justify-content:center;align-items:center;padding:6px;background:var(--card)}
 .stage svg.mascot{height:190px;width:auto;max-width:100%}
 .slots{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -281,7 +282,7 @@ svg.mini{width:13px;height:10px;display:inline-block;vertical-align:-1px}
 .it>svg{width:60%;height:60%}.it i{font:700 10.5px var(--body);font-style:normal}
 .it.lock{border:2px dashed var(--ink-3)}.it.lock>svg:not(.lk){opacity:.22}.it.lock i{color:var(--ink-3)}
 .it.own{opacity:.35}.it.sel,.it.on{border-width:3.5px;box-shadow:4px 4px 0 var(--ink)}
-.it .badge{position:absolute;top:5px;right:5px;width:19px;height:19px;border-radius:50%;background:var(--ink);color:#fff;font:800 11px/19px var(--body);text-align:center}
+.it .badge{position:absolute;top:5px;right:5px;width:19px;height:19px;border-radius:50%;background:var(--ink);color:var(--on-ink);font:800 11px/19px var(--body);text-align:center}
 .it svg.lk{position:absolute;top:7px;right:8px;width:12px;height:14px}
 .prog{border:2.5px solid var(--ink);border-radius:18px;padding:12px 14px}.prog .t{display:flex;justify-content:space-between;font:700 13px var(--body)}
 .prog .bar{height:10px;border:2px solid var(--ink);border-radius:99px;margin-top:8px;overflow:hidden}.prog .bar div{height:100%;background:var(--ink)}
@@ -300,7 +301,7 @@ svg.mini{width:13px;height:10px;display:inline-block;vertical-align:-1px}
 .rcrowns{margin:0;font:600 13.5px var(--body);color:var(--ink-2);display:flex;gap:5px;align-items:center;justify-content:center}
 .testbar{border:2px dashed var(--ink);border-radius:16px;padding:8px 10px;display:flex;flex-direction:column;gap:7px;font:500 13px var(--body)}
 .testbar .tb1{display:flex;align-items:center;gap:10px}.testbar .seg{display:inline-flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden}
-.testbar .seg button{border:0;background:var(--card);padding:4px 13px;font:800 13px var(--display);color:var(--ink)}.testbar .seg button.on{background:var(--ink);color:#fff}
+.testbar .seg button{border:0;background:var(--card);padding:4px 13px;font:800 13px var(--display);color:var(--ink)}.testbar .seg button.on{background:var(--ink);color:var(--on-ink)}
 .testbar .tl{margin-left:auto;border:0;background:none;text-decoration:underline;font:600 13px var(--body);color:var(--ink-2)}
 .testbar .tb2{display:flex;flex-wrap:wrap;gap:6px}.testbar .tb2 button{border:1.5px solid var(--ink);border-radius:99px;background:var(--card);padding:4px 10px;font:700 12px var(--body);color:var(--ink)}
 .prizebar .gift{width:22px;height:22px;flex:none}.prizebar .arr{margin-left:auto}
@@ -309,7 +310,7 @@ svg.mini{width:13px;height:10px;display:inline-block;vertical-align:-1px}
 .pill{border:2px solid var(--ink);border-radius:99px;background:var(--card);color:var(--ink);padding:7px 18px;font:700 14px var(--body)}
 .wex{display:flex;gap:6px}.wex .wt{width:38px;height:38px;font-size:20px;animation:none}
 .wstats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}.wstats b{display:block;font:800 26px var(--display)}.wstats span{font:500 12px var(--body);color:var(--ink-2)}
-.wdist{display:flex;flex-direction:column;gap:5px}.drow{display:flex;align-items:center;gap:8px;font:700 13px var(--body)}.dbar{flex:1}.dbar i{font:500 12px var(--body);font-style:normal;color:var(--ink-3)}.dbar div{background:var(--ink);color:#fff;font:700 12px var(--body);text-align:right;padding:2px 6px;border-radius:4px;min-height:18px;box-sizing:border-box}
+.wdist{display:flex;flex-direction:column;gap:5px}.drow{display:flex;align-items:center;gap:8px;font:700 13px var(--body)}.dbar{flex:1}.dbar i{font:500 12px var(--body);font-style:normal;color:var(--ink-3)}.dbar div{background:var(--ink);color:var(--on-ink);font:700 12px var(--body);text-align:right;padding:2px 6px;border-radius:4px;min-height:18px;box-sizing:border-box}
 .wtools{margin-top:18px}
 
 /* home: cats in the score cards */
@@ -323,7 +324,11 @@ svg.mini{width:13px;height:10px;display:inline-block;vertical-align:-1px}
 .crow{display:flex;align-items:baseline;justify-content:space-between;border-top:2px solid var(--ink);padding-top:9px;margin-top:-1px}.crow .pts{font-size:30px;margin:0}.crow .cap{font-size:11.5px;display:flex;gap:3px;align-items:center}
 .sheet.peek{display:flex;flex-direction:column;gap:12px}
 .pstats{grid-template-columns:repeat(3,1fr);margin:2px 0 4px}
-h1,h2,.sub,.gsub,.vs,.season,.kick{text-wrap:balance}p,.sheet li{text-wrap:pretty}
+h1,h2,.sub,.gsub,.vs,.season,.kick{text-wrap:balance}
+svg.cat{--ink:#111111}
+.plhead .dot:not(.white){background:#111;border-color:var(--ink)}
+.circ:not(.white){background:#111;color:#fff;border-color:var(--ink)}
+p,.sheet li{text-wrap:pretty}
 .htop{display:flex;align-items:center;justify-content:space-between;min-height:44px}.htitle{font:800 15px var(--display);letter-spacing:.06em;text-transform:uppercase}.htop .wpill{padding:7px 15px 7px 11px;font-size:14px}
 </style>
 
@@ -2861,12 +2866,12 @@ function mascot(mode,who){
     art=line("M128 170Q156 168 154 140",3)+shape("M72 176Q66 130 82 104Q100 96 118 104Q134 130 128 176Z")+line("M90 176v-8M110 176v-8",2.4,D)
       +head(100,74,1,mode==="guess"?-12:0)+extra;
   }
-  return `<svg class="mascot" viewBox="0 0 200 200" role="img" aria-label="${b?"Black cat LS":"White cat SH"}">${art}</svg>`;
+  return `<svg class="mascot cat" viewBox="0 0 200 200" role="img" aria-label="${b?"Black cat LS":"White cat SH"}">${art}</svg>`;
 }
 function peekCat(tag){
   const b=tag==="LS", I="var(--ink)", W="#fff", F=b?I:W, D=b?W:I;
   const line=(d,w=3,c=I)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
-  return `<svg viewBox="0 0 200 150" role="img" aria-label="${b?"Black cat LS":"White cat SH"}">
+  return `<svg class="cat" viewBox="0 0 200 150" role="img" aria-label="${b?"Black cat LS":"White cat SH"}">
     <path d="M50 130Q46 92 62 76L58 46L82 64Q100 58 118 64L142 46L138 76Q154 92 150 130Z" fill="${F}" stroke="${I}" stroke-width="3" stroke-linejoin="round"/>
     <circle cx="86" cy="96" r="4" fill="${D}"/><circle cx="114" cy="96" r="4" fill="${D}"/>${b?"":line("M81 90l-4-3M119 90l4-3",1.8)}
     ${line("M95 108q2.5 3 5 0q2.5 3 5 0",2.2,D)}${line("M50 108l-18-2M150 108l18-2",1.6)}
@@ -2879,6 +2884,7 @@ function loginScreen(){
 }
 
 /* ---------- home ---------- */
+
 function homeScreen(){
   const ls=totalPoints("LS"), sh=totalPoints("SH"), lead=ls===sh?null:(ls>sh?"LS":"SH"), me=S.choice, d=today(), cr=crowns(), dl=daysLeft(), wild=wildOf(d), ps=prizeState(me);
   const player=(tag,pts)=>`<div class="pl ${tag==="SH"?"white":""} ${tag===me?"me":""}"><div class="plhead"><span class="dot ${tag==="SH"?"white":""}"></span><b>${tag}</b>${lead===tag?CROWN:""}</div>
@@ -2896,14 +2902,14 @@ function homeScreen(){
   if(dc){ if(dc.drawer===me&&!dc.strokes) dStatus="Your turn: draw"; else if(dc.drawer===me) dStatus=`Waiting for ${dc.guesser}`;
     else if(!dc.strokes) dStatus=`${dc.drawer} is drawing`; else dStatus="Your turn: guess"; }
   const ID=`<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27c4-9 8-13 11-11s-3 10 1 11 7-13 11-12 0 9 3 10 4-3 4-3"/></svg>`;
-  const tile=(go,title,lang,status,icon)=>`<button class="game ${go===wild?"wild":""}" data-go="${go}"><span class="gicon">${icon}</span><span class="gtext"><b>${title}</b><span>${esc(status)}</span></span>${go===wild?'<span class="x2">×2 today</span>':lang?`<span class="glang">${lang}</span>`:""}</button>`;
+  const tile=(go,title,lang,status,icon)=>`<button class="game ${go===wild?"wild":""}" data-go="${go}"><span class="gicon">${icon}</span><span class="gtext"><b>${title}</b><span>${esc(status)}</span></span>${xMult(go,d)>1?`<span class="x2">×${xMult(go,d)} today</span>`:lang?`<span class="glang">${lang}</span>`:""}</button>`;
   const IW=`<svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="12" width="9" height="9" rx="2"/><rect x="15.5" y="12" width="9" height="9" rx="2" fill="currentColor"/><rect x="28" y="12" width="9" height="9" rx="2"/></g></svg>`;
   const IS=`<svg viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="5" width="30" height="30" rx="4"/><path d="M15 5v30M25 5v30M5 15h30M5 25h30" stroke-width="1.6"/></g><text x="10" y="13.5" font-size="7" font-weight="700" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">5</text><text x="27" y="33.5" font-size="7" font-weight="700" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">9</text></svg>`;
   const IP=`<svg viewBox="0 0 40 40"><text x="20" y="29" text-anchor="middle" font-size="26" font-weight="800" fill="currentColor" font-family="Helvetica Neue,Helvetica,Arial">П</text></svg>`;
   const HG=`<svg viewBox="0 0 24 24" class="hg" aria-hidden="true"><path d="M12 7.5V6.6a2.2 2.2 0 1 0-2.2-2.2M12 7.5L3 14.2Q2 15 2.6 16H21.4Q22 15 21 14.2Z" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const other=me==="LS"?"SH":"LS", pts={LS:ls,SH:sh};
   return `<div class="htop"><b class="htitle">Play Time</b><button class="wpill" data-go="wardrobe">${HG}Wardrobe</button></div>`+errBox()+
-    `<p class="season">${dl===0?"Crown at midnight":dl===1?"1 day left this week":dl+" days left this week"} · <b>${GAME_NAMES[wild]} ×2 today</b></p>
+    `<p class="season">${dl===0?"Crown at midnight":dl===1?"1 day left this week":dl+" days left this week"} · <b>${isWeekend(d)?`Weekend ×2 · ${GAME_NAMES[wild]} ×3`:`${GAME_NAMES[wild]} ×2 today`}</b></p>
      <div class="cboard">${[me,other].map(t=>`<button class="pl ${t===me?"me":""} ccard ${t==="SH"?"sh":""}" ${t===me?'data-go="wardrobe" aria-label="My wardrobe"':`data-peek="${t}" aria-label="${t}'s wardrobe"`}><div class="plhead"><span class="dot ${t==="SH"?"white":""}"></span><b>${t}</b>${lead===t?CROWN:""}</div><div class="ccat">${cardCats(t)}</div><div class="crow"><span class="pts">${pts[t]}</span><span class="cap">${t===me?"you":"points"} · ${MINICROWN}${cr[t]}</span></div></button>`).join("")}</div>
      ${ps.picks?`<button class="prizebar" data-go="unlock"><svg class="gift" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="9" width="17" height="11" rx="2"/><path d="M2.5 9h19M12 9v11"/><path d="M12 9C9 9 6.5 7.8 7 5.6C7.6 3.6 10.6 4.4 12 9C13.4 4.4 16.4 3.6 17 5.6C17.5 7.8 15 9 12 9Z"/></g></svg><span>You earned a prize — pick it</span><span class="arr">→</span></button>`:""}
      <section class="group"><h2>Play solo</h2><p class="gsub">New every day · the same puzzle for both of you</p>
@@ -3271,9 +3277,9 @@ const ITEM_BOX={sunglasses:[70,60,60,22],iqos:[98,44,76,56],pendant:[78,96,44,36
 const GROUND_H={perfume:48,drink:66,ball:25,burger:22,iphone:48,sword:84,kinder:50,beba:56};
 function itemThumb(k,who){
   const b=who==="LS";
-  if(WORN[k]){const [x,y,w,h]=ITEM_BOX[k],m=Math.max(w,h)+6,cx=x+w/2,cy=y+h/2;return `<svg viewBox="${cx-m/2} ${cy-m/2} ${m} ${m}" aria-hidden="true">${WORN[k](false)}</svg>`}
-  const g=GROUND[k],H=GROUND_H[k],m=Math.max(g.w,H)+8+(k==="burger"?14:0);
-  return `<svg viewBox="${g.w/2-m/2} ${-H/2-m/2} ${m} ${m}" aria-hidden="true">${g.f(b,"L")}</svg>`;
+  if(WORN[k]){const [x,y,w,h]=ITEM_BOX[k],m=Math.max(w,h)+6,cx=x+w/2,cy=y+h/2;return `<svg class="cat" viewBox="${cx-m/2} ${cy-m/2} ${m} ${m}" aria-hidden="true">${WORN[k](false)}</svg>`}
+  const g=GROUND[k],H=GROUND_H[k],m=Math.max(g.w,H)+8+(k==="burger"?-3:0);
+  return `<svg class="cat" viewBox="${g.w/2-m/2} ${-H/2-m/2} ${m} ${m}" aria-hidden="true">${g.f(b,"L")}</svg>`;
 }
 const wardOf=tag=>(LIVE.ward||{})[tag]||{kind:"wardrobe",player:tag,owned:[],wearing:[]};
 function allTimePoints(tag){let t=0;for(const e of ledger())if(e.tag===tag)t+=e.pts;return t}
@@ -3334,7 +3340,11 @@ function takeItem(){
 /* ---------- daily wildcard: one game a day is worth double, the same for both ---------- */
 const GAME_NAMES={wordle:"Wordle",sudoku:"Sudoku",pe:"Игра на П",draw:"Sketch"};
 const wildOf=d=>["wordle","sudoku","pe","draw"][(hash("wild|"+d)+(S.wildShift||0))%4];
-const xMult=(game,d=today())=>wildOf(d)===game?2:1;
+const /* weekend boost (from the week of 9 Nov 2026): Saturday and Sunday every game counts ×2; the wildcard on a weekend counts ×3 */
+WEEKEND_FROM="2026-11-09",
+isWeekend=(d=today())=>d>=WEEKEND_FROM&&((dayNum(d)+3)%7)>=5,
+xMult=(game,d=today())=>1+(wildOf(d)===game?1:0)+(isWeekend(d)?1:0),
+multChip=(game)=>{const m=xMult(game);if(m<2)return "";const w=wildOf(today())===game,we=isWeekend();return `<span class="chip">×${m} ${we&&w?"weekend + wildcard":we?"weekend":"wildcard"}</span>`};
 
 /* ---------- weekly recap for the winner ---------- */
 function weekRecap(wk){
@@ -3566,7 +3576,7 @@ function openSheet(kind){
     <p><b>Green</b> — right letter, right spot. <b>Yellow</b> — the letter is in the word but somewhere else. <b>Grey</b> — not in the word. Any real English five-letter word counts as a guess.</p>
     <table><thead><tr><th>Solved in</th><th class="r">Points</th></tr></thead><tbody>${[1,2,3,4,5,6].map(n=>`<tr><td>${n} ${n>1?"tries":"try"}</td><td class="r">+${7-n}</td></tr>`).join("")}
       <tr><td>Fewer tries than the other cat that day</td><td class="r">+1</td></tr><tr><td>Not solved</td><td class="r">0</td></tr></tbody></table>
-    <p>On days when Wordle is the wildcard, all Wordle points count double.</p>`;
+    <p>On days when Wordle is the wildcard, all Wordle points count double. On Saturdays and Sundays every game counts double, and the wildcard counts triple.</p>`;
   if(kind==="whist"){
     const me=S.choice, other=me==="LS"?"SH":"LS", d0=today();
     const mine=Object.values(LIVE.solo||{}).filter(v=>v.kind==="wordle"&&v.player===me).sort((a,b)=>a.date<b.date?1:-1);
@@ -3625,14 +3635,14 @@ function showOverlay(o){
   if(o.kind==="sent") h=`${mascot("win",S.choice)}<span class="kick">Clues sent</span><div class="big">${letters("Done!")}</div>
       <div class="box sentclues">${o.clues.map((c,i)=>`<div class="clue"><span class="n">0${i+1}</span><span class="t">${esc(c)}</span></div>`).join("")}</div>`+card("Fact",nextFact());
   else if(o.kind==="won") h=`${mascot("win",S.choice)}<span class="kick">On try ${o.at+1}${o.sniper?" · one word":""}</span><div class="big">${letters(o.word)}</div>
-      <div class="pts"><span class="chip lemon">you +${o.mine*xMult("pe")}</span>${o.theirs?`<span class="chip tomato">${esc(o.otherName)} +${o.theirs*xMult("pe")}</span>`:""}${xMult("pe")>1?'<span class="chip">×2 wildcard</span>':""}</div>`;
+      <div class="pts"><span class="chip lemon">you +${o.mine*xMult("pe")}</span>${o.theirs?`<span class="chip tomato">${esc(o.otherName)} +${o.theirs*xMult("pe")}</span>`:""}${multChip("pe")}</div>`;
   else if(o.kind==="lost") h=`${mascot("lose",S.choice)}<span class="kick">Not guessed</span><div class="big">${letters(o.word)}</div><div class="pts"><span class="chip">+0 · your turn next</span></div>`;
-  else if(o.kind==="wwin") h=`${mascot("win",S.choice)}<span class="kick">Solved in ${o.tries}</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip lemon">+${o.pts*xMult("wordle")}</span>${xMult("wordle")>1?'<span class="chip">×2 wildcard</span>':""}</div><p class="vs">${esc(o.vs||"")}</p>`+card("For you",litOfDay());
+  else if(o.kind==="wwin") h=`${mascot("win",S.choice)}<span class="kick">Solved in ${o.tries}</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip lemon">+${o.pts*xMult("wordle")}</span>${multChip("wordle")}</div><p class="vs">${esc(o.vs||"")}</p>`+card("For you",litOfDay());
   else if(o.kind==="wlose") h=`${mascot("lose",S.choice)}<span class="kick">Out of tries</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip">+0 · new word tomorrow</span></div><p class="vs">${esc(o.vs||"")}</p>`;
-  else if(o.kind==="swin") h=`${mascot("win",S.choice)}<span class="kick">${esc(o.level)} sudoku solved</span><div class="big">${letters("Solved!")}</div><div class="pts"><span class="chip lemon">+${o.pts*xMult("sudoku")}</span>${xMult("sudoku")>1?'<span class="chip">×2 wildcard</span>':""}</div><p class="vs">${esc(o.vs||"")}</p>`+(()=>{const [l,q]=quoteOfDay(o.lk);return card(l,q)})();
+  else if(o.kind==="swin") h=`${mascot("win",S.choice)}<span class="kick">${esc(o.level)} sudoku solved</span><div class="big">${letters("Solved!")}</div><div class="pts"><span class="chip lemon">+${o.pts*xMult("sudoku")}</span>${multChip("sudoku")}</div><p class="vs">${esc(o.vs||"")}</p>`+(()=>{const [l,q]=quoteOfDay(o.lk);return card(l,q)})();
   else if(o.kind==="dsent") h=`<span class="kick">Drawing sent</span><div class="frame small">${sketchSVG(o.strokes)}</div><div class="pts"><span class="chip">+${DPTS.draw} if guessed · +${DPTS.draw+DPTS.drawFirst} on the first try</span></div>`+card("Artists say",nextArt());
   else if(o.kind==="dwon") h=`${mascot("win",S.choice)}<span class="kick">On try ${o.at+1}</span><div class="big">${letters(o.word.toUpperCase())}</div>
-      <div class="pts"><span class="chip lemon">you +${o.mine*xMult("draw")}</span><span class="chip tomato">${esc(o.otherName)} +${o.theirs*xMult("draw")}</span>${xMult("draw")>1?'<span class="chip">×2 wildcard</span>':""}</div>`+card("Artists say",nextArt());
+      <div class="pts"><span class="chip lemon">you +${o.mine*xMult("draw")}</span><span class="chip tomato">${esc(o.otherName)} +${o.theirs*xMult("draw")}</span>${multChip("draw")}</div>`+card("Artists say",nextArt());
   else if(o.kind==="dlost") h=`${mascot("lose",S.choice)}<span class="kick">Out of tries</span><div class="big">${letters(o.word.toUpperCase())}</div><div class="pts"><span class="chip">+0 for both · new round next</span></div>`;
   el.innerHTML=`<div class="in">${h}${cta("ovclose","Next")}</div>`;
   el.hidden=false; document.body.style.overflow="hidden";
