@@ -2786,7 +2786,8 @@ function totalPoints(tag){return weekPoints(tag,weekOf(today()))}
 /* ---------- weekly seasons ---------- */
 /* every point carries a date; scores reset each Monday (Moscow time), the week's winner takes a crown */
 const weekOf=d=>{const n=dayNum(d);return n-((n+3)%7)}; /* day number of that week's Monday */
-const SPTS=l=>(SUDOKU_LEVELS.find(x=>x.k===l)||{pts:0}).pts;
+const /* sudoku points: 3/4/5 for puzzles solved from 11 Nov 2026 (saved with pv:2); older solves keep their original 1/2/3 so past scores never change */
+SPTS=(l,v)=>{const L=SUDOKU_LEVELS.find(x=>x.k===l);if(!L)return 0;return v&&!(v.pv>=2)?L.old:L.pts};
 function wordleOf(tag,d){return (LIVE.solo||{})[soloId("wordle",d,tag)]}
 const wTries=v=>v.status==="won"?v.guesses.length:7;
 function wordleDuel(d){ /* +1 to whoever needed fewer tries, once both have played that day */
@@ -2797,7 +2798,7 @@ function wordleDuel(d){ /* +1 to whoever needed fewer tries, once both have play
 function ledgerFull(){
   const P=[], Q=[], add=(tag,pts,d,game)=>{if(pts&&d)P.push({tag,pts:pts*(game==="bonus"?1:xMult(game,d)),wk:weekOf(d),game})}, play=(tag,d,game)=>{if(d)Q.push({tag,wk:weekOf(d),game})};
   for(const v of Object.values(LIVE.solo||{})){
-    if(v.kind==="sudoku"){add(v.player,SPTS(v.level),v.date,"sudoku");play(v.player,v.date,"sudoku")}
+    if(v.kind==="sudoku"){add(v.player,SPTS(v.level,v),v.date,"sudoku");play(v.player,v.date,"sudoku")}
     if(v.kind==="wordle"){add(v.player,v.points||0,v.date,"wordle");play(v.player,v.date,"wordle")}
     if(v.kind==="bonus") add(v.player,v.points||0,v.date,"bonus");
   }
@@ -3472,7 +3473,7 @@ function wKeyPress(k){
 }
 
 /* ---------- Sudoku ---------- */
-const SUDOKU_LEVELS=[{k:"easy",name:"Easy",givens:40,pts:1},{k:"medium",name:"Medium",givens:32,pts:2},{k:"hard",name:"Hard",givens:26,pts:3}];
+const SUDOKU_LEVELS=[{k:"easy",name:"Easy",givens:40,pts:3,old:1},{k:"medium",name:"Medium",givens:32,pts:4,old:2},{k:"hard",name:"Hard",givens:26,pts:5,old:3}];
 function rng(seed){let a=hash(seed);return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function sCount(g,limit=2){ /* counts solutions up to limit, bitmask solver */
   const row=Array(9).fill(0),col=Array(9).fill(0),box=Array(9).fill(0),empty=[];
@@ -3507,7 +3508,7 @@ function sudokuScreen(){
   const d=today();
   if(!SS.level){
     const lv=SUDOKU_LEVELS.map(l=>{const done=soloDone("sudoku",d,S.choice,l.k);
-      return `<button class="game" data-level="${l.k}"><span class="gtext"><b>${l.name}</b><span>${done?`Solved today · +${SUDOKU_LEVELS.find(x=>x.k===l.k).pts}`:`+${l.pts} ${l.pts===1?"point":"points"}`}</span></span><span class="glang">${done?"✓":"→"}</span></button>`}).join("");
+      return `<button class="game" data-level="${l.k}"><span class="gtext"><b>${l.name}</b><span>${done?`Solved today · +${SPTS(l.k,done)}`:`+${l.pts} ${l.pts===1?"point":"points"}`}</span></span><span class="glang">${done?"✓":"→"}</span></button>`}).join("");
     return topBar("Sudoku",fmtDayEn(d))+errBox()+`<div class="hero"><h1>Pick a level</h1><span class="sub">a new puzzle every day · the same for both of you</span></div><section class="group">${lv}</section>`;
   }
   const {puz,sol}=sudokuFor(d,SS.level), done=soloDone("sudoku",d,S.choice,SS.level);
@@ -3519,7 +3520,7 @@ function sudokuScreen(){
     const cls=["sc",given?"given":"",i===SS.sel?"sel":"",SS.sel>=0&&(r===sr||c===sc||((r/3|0)===(sr/3|0)&&(c/3|0)===(sc/3|0)))?"peer":"",selV&&v===selV?"same":"",conflict?"bad":"",c%3===2&&c<8?"br":"",r%3===2&&r<8?"bb":""].filter(Boolean).join(" ");
     cells+=`<button class="${cls}" data-cell="${i}" aria-label="Row ${r+1} column ${c+1}${v?", "+v:""}">${v||""}</button>`}
   const L=SUDOKU_LEVELS.find(x=>x.k===SS.level);
-  const pad=done?`<p class="wnext">Solved · +${SPTS(SS.level)}. A new one tomorrow.</p><p class="wrival">${(()=>{const o=S.choice==="LS"?"SH":"LS";return soloDone("sudoku",d,o,SS.level)?`${o} solved this one too`:`${o} hasn't solved this one yet`})()}</p>`:`<div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="key" data-num="${n}">${n}</button>`).join("")}<button class="key" data-num="0" aria-label="Erase">⌫</button></div>`;
+  const pad=done?`<p class="wnext">Solved · +${SPTS(SS.level,done)}. A new one tomorrow.</p><p class="wrival">${(()=>{const o=S.choice==="LS"?"SH":"LS";return soloDone("sudoku",d,o,SS.level)?`${o} solved this one too`:`${o} hasn't solved this one yet`})()}</p>`:`<div class="pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="key" data-num="${n}">${n}</button>`).join("")}<button class="key" data-num="0" aria-label="Erase">⌫</button></div>`;
   return topBar("Sudoku",`${L.name} · ${fmtDayEn(d)}`)+errBox()+`<div class="sgrid">${cells}</div>${pad}<button class="link center" data-level="">other levels</button>`;
 }
 function sInput(n){
@@ -3527,7 +3528,7 @@ function sInput(n){
   const {puz,sol}=sudokuFor(d,SS.level); if(puz[SS.sel]) return;
   const cur=sLoad(d,SS.level)||[...puz]; cur[SS.sel]=n; sSave(d,SS.level,cur);
   if(cur.every((v,i)=>v===sol[i])){const L=SUDOKU_LEVELS.find(x=>x.k===SS.level);
-    saveSolo("sudoku",{kind:"sudoku",player:S.choice,date:d,level:SS.level,status:"won",points:L.pts});
+    saveSolo("sudoku",{kind:"sudoku",player:S.choice,date:d,level:SS.level,status:"won",points:L.pts,pv:2});
     setTimeout(()=>showOverlay({kind:"swin",level:L.name,lk:L.k,pts:L.pts,vs:(()=>{const o=S.choice==="LS"?"SH":"LS";return soloDone("sudoku",d,o,L.k)?`${o} solved this one too`:`${o} hasn't solved this one yet`})()}),300)}
   render();
 }
